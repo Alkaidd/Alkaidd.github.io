@@ -18,5 +18,15 @@ export default defineConfig({
     }),
     presetTypography(),
   ],
+  rules: [
+    [
+      'list-none',
+      {
+        'list-style': 'none',
+        margin: 0,
+        padding: 0,
+      },
+    ],
+  ],
   transformers: [transformerAttributifyJsx()],
 })
