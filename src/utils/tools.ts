@@ -15,7 +15,7 @@ function swap(a: number[], i: number, j: number) {
   a[j] = temp
 }
 
-export function horizontalFlip(matrix) {
+export function horizontalFlip(matrix: number[][]) {
   const rows = matrix.length
   const cols = matrix[0].length
   const flippedMatrix = JSON.parse(JSON.stringify(matrix)) // 创建矩阵的深拷贝
