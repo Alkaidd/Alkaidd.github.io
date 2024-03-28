@@ -238,7 +238,7 @@ export default function TetrisScreen() {
     }
     let score = checkMatrixOneRow(args.current.lastScreen)
     if (score > 0) {
-      score = 1.1 ** score * 100 * args.current.currentSpeed
+      score = 1.1 ** (score - 1) * score * 100 * args.current.currentSpeed
     }
     const newMatrix = checkMatrix(args.current.lastScreen, false)
     if (args.current.renderCubeFlag) {
