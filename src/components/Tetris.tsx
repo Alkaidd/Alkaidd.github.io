@@ -356,28 +356,32 @@ export default function TetrisScreen() {
   return (
     <div flex items-center>
       <div>
-        <button
-          onClick={() => {
-            clearScreen()
-          }}>
-          clear
-        </button>
-        <button
-          onClick={() => {
-            args.current.pause = true
-            tick.current.stop()
-          }}>
-          pause
-        </button>
-        <button
-          onClick={() => {
-            args.current.gameStatus = 'pending'
-            args.current.pause = false
-            tick.current.start()
-          }}>
-          start
-        </button>
-        <span ml-10>score: {Math.floor(args.current.score)}</span>
+        <div flex items-center>
+          <button
+            onClick={() => {
+              clearScreen()
+            }}>
+            clear
+          </button>
+          <button
+            onClick={() => {
+              args.current.pause = true
+              tick.current.stop()
+            }}>
+            pause
+          </button>
+          <button
+            onClick={() => {
+              args.current.gameStatus = 'pending'
+              args.current.pause = false
+              tick.current.start()
+            }}>
+            start
+          </button>
+          <div ml-10 w-30>
+            <ScoreCard score={args.current.score} />
+          </div>
+        </div>
         <div flex flex-col w-fit border-2 border-solid border-light>
           {matrix.slice(4).map((column, columnIndex) => (
             <ul key={`${column}_${columnIndex}`} list-none flex>
@@ -424,13 +428,18 @@ export default function TetrisScreen() {
   )
 }
 
+function ScoreCard({ score }: { score: number }) {
+  return (
+    <>
+      <span w-full>score: {Math.floor(score)}</span>
+    </>
+  )
+}
+
 function CurrentModeCard(props: { mode: string }) {
   return (
     <>
-      current mode:{' '}
-      <span w-15 color-blue>
-        {props.mode}
-      </span>
+      current mode: <span color-blue>{props.mode}</span>
     </>
   )
 }
