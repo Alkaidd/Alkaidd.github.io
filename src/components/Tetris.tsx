@@ -17,10 +17,11 @@ const CUBEKEY = {
 } as const
 const CUBE = {
   I: [
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
   ],
   L: [
     [1, 0, 0],
@@ -177,23 +178,10 @@ function cubePostionLegal(x: number, y: number, cube: CubeShape, screen: PixelTy
 }
 
 export default function TetrisScreen() {
-  const args = useRef<{
-    cubeInitX: number
-    cubeInitY: number
-    cube: CubeShape
-    addSpeed: number
-    currentSpeed: number
-    fullSpeed: number
-    speedStep: number
-    lastTickTime: number
-    moveYFlag: boolean
-    pause: boolean
-    score: number
-    renderCubeFlag: boolean
-    lastScreen: PixelType[][]
-  }>({
+  const args = useRef<GameStatus>({
     cubeInitX: 3,
     cubeInitY: 0,
+    nextCube: getRandomCube(),
     cube: CUBE['O'],
     addSpeed: 0,
     currentSpeed: 1,
@@ -205,11 +193,14 @@ export default function TetrisScreen() {
     score: 0,
     renderCubeFlag: false,
     lastScreen: genMatrix(height, width),
+    gameStatus: 'waiting',
   })
+
   const initArgs = () => {
     args.current.cubeInitX = 3
     args.current.cubeInitY = 0
-    args.current.cube = getRandomCube()
+    args.current.cube = args.current.nextCube
+    args.current.nextCube = getRandomCube()
     args.current.renderCubeFlag = true
   }
 
@@ -225,8 +216,10 @@ export default function TetrisScreen() {
 
   const checkGameEnd = () => {
     if (args.current.lastScreen[3].some((cell) => cell.value === 1 && cell.type === 'riverbed')) {
+      args.current.gameStatus = 'end'
       window.alert(`GAME OVER! SCORE: ${Math.floor(args.current.score)}`)
       clearScreen()
+      args.current.gameStatus = 'waiting'
       return true
     }
     return false
@@ -240,12 +233,13 @@ export default function TetrisScreen() {
     }
     let score = checkMatrixOneRow(args.current.lastScreen)
     if (score > 0) {
-      score = 1.1 ** (score - 1) * score * 100 * args.current.currentSpeed
+      // 1.1 多行奖励系数; 100基础倍率; 当前速度系数; 难度奖励;
+      score = 1.1 ** (score - 1) * score * 100 * args.current.currentSpeed * (args.current.fullSpeed / 10)
     }
     const newMatrix = checkMatrix(args.current.lastScreen, false)
     if (args.current.renderCubeFlag) {
       if (nowTicktime && args.current.currentSpeed < args.current.fullSpeed && args.current.lastTickTime >= 1000) {
-        args.current.currentSpeed += 0.0005
+        args.current.currentSpeed += args.current.speedStep
       }
       if (
         !nowTicktime ||
@@ -289,11 +283,19 @@ export default function TetrisScreen() {
 
   const tick = useRef(new Tick(tickEvent))
 
-  function changeMode(mode: 'easy' | 'normal' | 'hard') {
+  const [mode, setMode] = useState<GameMode>('normal')
+  function changeMode(mode: GameMode) {
     if (mode === 'easy') {
+      args.current.fullSpeed = 10
+      args.current.speedStep = 0.0002
     } else if (mode === 'normal') {
+      args.current.fullSpeed = 12
+      args.current.speedStep = 0.0004
     } else if (mode === 'hard') {
+      args.current.fullSpeed = 14
+      args.current.speedStep = 0.0006
     }
+    setMode(mode)
   }
 
   function onKeyDown(event: KeyboardEvent) {
@@ -369,6 +371,7 @@ export default function TetrisScreen() {
         </button>
         <button
           onClick={() => {
+            args.current.gameStatus = 'pending'
             args.current.pause = false
             tick.current.start()
           }}>
@@ -392,24 +395,84 @@ export default function TetrisScreen() {
         </div>
       </div>
       <div ml-10>
-        <div></div>
-        <div flex flex-col mb-5>
-          <span mb-1>mode: </span>
-          <button ml-5 mb-2>
+        <div w-40 h-40 flex items-center justify-center>
+          <CurrentCube cubeMatrix={args.current.nextCube as unknown as number[][]} />
+        </div>
+        <div w-50 flex flex-col mb-5>
+          <div mb-5>
+            <CurrentModeCard mode={mode} />
+          </div>
+          <div mb-1>mode: </div>
+          <button ml-5 mb-2 w-30 onClick={() => changeMode('easy')} disabled={args.current.gameStatus !== 'waiting'}>
             easy
           </button>
-          <button ml-5 mb-2>
+          <button ml-5 mb-2 w-30 onClick={() => changeMode('normal')} disabled={args.current.gameStatus !== 'waiting'}>
             normal
           </button>
-          <button ml-5 mb-2>
+          <button ml-5 mb-2 w-30 onClick={() => changeMode('hard')} disabled={args.current.gameStatus !== 'waiting'}>
             hard
           </button>
         </div>
-        <div>↑：旋转</div>
-        <div>←：左移</div>
-        <div>→：右移</div>
-        <div>↓：加速</div>
+        <div>
+          <div>↑：旋转</div>
+          <div>←：左移</div>
+          <div>→：右移</div>
+          <div>↓：加速</div>
+        </div>
       </div>
     </div>
   )
+}
+
+function CurrentModeCard(props: { mode: string }) {
+  return (
+    <>
+      current mode:{' '}
+      <span w-15 color-blue>
+        {props.mode}
+      </span>
+    </>
+  )
+}
+
+function CurrentCube({ cubeMatrix }: ICurrentCube) {
+  return (
+    <div flex flex-col w-fit border-2 border-solid border-light>
+      {cubeMatrix.map((column, columnIndex) => (
+        <ul key={`${column}_${columnIndex}`} list-none flex>
+          {column.map((cell, rowIndex) => (
+            <li key={rowIndex}>
+              {cell === 1 ? (
+                <div bg-black h-5 w-5 border-1 border-solid border-gray></div>
+              ) : (
+                <div bg-white h-5 w-5 border-1 border-solid border-gray></div>
+              )}
+            </li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  )
+}
+
+type GameMode = 'easy' | 'normal' | 'hard'
+type ICurrentCube = {
+  cubeMatrix: number[][]
+}
+type GameStatus = {
+  cubeInitX: number
+  cubeInitY: number
+  nextCube: CubeShape
+  cube: CubeShape
+  addSpeed: number
+  currentSpeed: number
+  fullSpeed: number
+  speedStep: number
+  lastTickTime: number
+  moveYFlag: boolean
+  pause: boolean
+  score: number
+  renderCubeFlag: boolean
+  lastScreen: PixelType[][]
+  gameStatus: 'waiting' | 'pending' | 'end'
 }
