@@ -184,6 +184,7 @@ export default function TetrisScreen() {
     addSpeed: number
     currentSpeed: number
     fullSpeed: number
+    speedStep: number
     lastTickTime: number
     moveYFlag: boolean
     pause: boolean
@@ -197,6 +198,7 @@ export default function TetrisScreen() {
     addSpeed: 0,
     currentSpeed: 1,
     fullSpeed: 10,
+    speedStep: 0.0005,
     lastTickTime: 0,
     moveYFlag: true,
     pause: true,
@@ -286,6 +288,13 @@ export default function TetrisScreen() {
   }
 
   const tick = useRef(new Tick(tickEvent))
+
+  function changeMode(mode: 'easy' | 'normal' | 'hard') {
+    if (mode === 'easy') {
+    } else if (mode === 'normal') {
+    } else if (mode === 'hard') {
+    }
+  }
 
   function onKeyDown(event: KeyboardEvent) {
     if (args.current.pause) {
@@ -383,6 +392,19 @@ export default function TetrisScreen() {
         </div>
       </div>
       <div ml-10>
+        <div></div>
+        <div flex flex-col mb-5>
+          <span mb-1>mode: </span>
+          <button ml-5 mb-2>
+            easy
+          </button>
+          <button ml-5 mb-2>
+            normal
+          </button>
+          <button ml-5 mb-2>
+            hard
+          </button>
+        </div>
         <div>↑：旋转</div>
         <div>←：左移</div>
         <div>→：右移</div>
