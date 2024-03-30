@@ -299,6 +299,16 @@ export default function TetrisScreen() {
   }
 
   function onKeyDown(event: KeyboardEvent) {
+    if (event.key === ' ') {
+      if (args.current.pause) {
+        args.current.gameStatus = 'pending'
+        args.current.pause = false
+        tick.current.start()
+      } else {
+        args.current.pause = true
+        tick.current.stop()
+      }
+    }
     if (args.current.pause) {
       return
     }
@@ -422,6 +432,7 @@ export default function TetrisScreen() {
           <div>←：左移</div>
           <div>→：右移</div>
           <div>↓：加速</div>
+          <div>[space]：start/pause</div>
         </div>
       </div>
     </div>
