@@ -1,4 +1,7 @@
+import { useMoyuStore } from '@/hooks/store'
+
 export default function Moyu() {
+  const moyuFlag = useMoyuStore((state) => state.moyuFlag)
   return (
     <div
       pos-absolute
@@ -9,6 +12,6 @@ export default function Moyu() {
       bg-no-repeat
       bg-cover
       bg-top
-      style={{ backgroundImage: 'url("/static/zustand.png")' }}></div>
+      style={{ backgroundImage: 'url("/static/zustand.png")', display: moyuFlag ? 'block' : 'none' }}></div>
   )
 }
