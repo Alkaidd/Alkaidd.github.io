@@ -3,6 +3,7 @@
 import { genMatrix, horizontalFlip, PixelType, rotateMatrix } from '@/utils/tools'
 import { useEffect, useRef, useState } from 'react'
 import Tick from '@/utils/tick'
+import { useMoyuStore } from '@/hooks/store'
 
 const width = 12
 const height = 24
@@ -298,13 +299,16 @@ export default function TetrisScreen() {
     setMode(mode)
   }
 
+  const moOrNot = useMoyuStore((state) => state.moOrNot)
   function onKeyDown(event: KeyboardEvent) {
     if (event.key === ' ') {
       if (args.current.pause) {
+        moOrNot(false)
         args.current.gameStatus = 'pending'
         args.current.pause = false
         tick.current.start()
       } else {
+        moOrNot(true)
         args.current.pause = true
         tick.current.stop()
       }
