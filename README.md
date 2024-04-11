@@ -1,9 +1,11 @@
 # Tetris
-## start the project
+Support maobile now.
+
+## Start the project
 ```bash
 pnpm i
 pnpm dev
 ```
 
-## enjoy game
-enjoy it.
+## Enjoy game
+Enjoy it.
