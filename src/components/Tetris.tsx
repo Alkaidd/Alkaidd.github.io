@@ -1,6 +1,6 @@
 // 12 * 20
 
-import { genMatrix, horizontalFlip, PixelType, rotateMatrix } from '@/utils/tools'
+import { genMatrix, horizontalFlip, PixelType, rotateMatrix, isMobile } from '@/utils/tools'
 import { useEffect, useRef, useState } from 'react'
 import Tick from '@/utils/tick'
 import { useMoyuStore } from '@/hooks/store'
@@ -318,30 +318,46 @@ export default function TetrisScreen() {
     }
     if (event.key === 'ArrowUp') {
       // 上箭头键
-      const newCube = rotateMatrix(args.current.cube as unknown as number[][], 90) as unknown as CubeShape
-      if (cubePostionLegal(args.current.cubeInitX, args.current.cubeInitY, newCube, args.current.lastScreen)) {
-        args.current.cube = newCube as unknown as CubeShape
-        tickEvent()
-      }
+      arrowUp()
     } else if (event.key === 'ArrowDown') {
       // 下箭头键
-      args.current.addSpeed = args.current.fullSpeed
+      arrowDown()
     } else if (event.key === 'ArrowLeft') {
       // 左箭头键
-      const newX = args.current.cubeInitX - 1
-      if (cubePostionLegal(newX, args.current.cubeInitY, args.current.cube, args.current.lastScreen)) {
-        args.current.cubeInitX = newX
-        tickEvent()
-      }
+      arrowLeft()
     } else if (event.key === 'ArrowRight') {
       // 右箭头键
-      const newX = args.current.cubeInitX + 1
-      if (cubePostionLegal(newX, args.current.cubeInitY, args.current.cube, args.current.lastScreen)) {
-        args.current.cubeInitX = newX
-        tickEvent()
-      }
+      arrowRight()
     }
     // 这里可以添加处理其他按键的逻辑
+  }
+
+  function arrowUp() {
+    const newCube = rotateMatrix(args.current.cube as unknown as number[][], 90) as unknown as CubeShape
+    if (cubePostionLegal(args.current.cubeInitX, args.current.cubeInitY, newCube, args.current.lastScreen)) {
+      args.current.cube = newCube as unknown as CubeShape
+      tickEvent()
+    }
+  }
+
+  function arrowDown() {
+    args.current.addSpeed = args.current.fullSpeed
+  }
+
+  function arrowLeft() {
+    const newX = args.current.cubeInitX - 1
+    if (cubePostionLegal(newX, args.current.cubeInitY, args.current.cube, args.current.lastScreen)) {
+      args.current.cubeInitX = newX
+      tickEvent()
+    }
+  }
+
+  function arrowRight() {
+    const newX = args.current.cubeInitX + 1
+    if (cubePostionLegal(newX, args.current.cubeInitY, args.current.cube, args.current.lastScreen)) {
+      args.current.cubeInitX = newX
+      tickEvent()
+    }
   }
 
   function onKeyUp(event: KeyboardEvent) {
@@ -354,12 +370,14 @@ export default function TetrisScreen() {
   }
 
   useEffect(() => {
-    window.removeEventListener('keydown', onKeyDown)
-    window.addEventListener('keydown', onKeyDown)
+    if (!isMobile) {
+      window.removeEventListener('keydown', onKeyDown)
+      window.addEventListener('keydown', onKeyDown)
 
-    //
-    window.removeEventListener('keyup', onKeyUp)
-    window.addEventListener('keyup', onKeyUp)
+      //
+      window.removeEventListener('keyup', onKeyUp)
+      window.addEventListener('keyup', onKeyUp)
+    }
 
     return () => {
       window.removeEventListener('keydown', onKeyDown)
@@ -368,77 +386,110 @@ export default function TetrisScreen() {
   })
 
   return (
-    <div flex items-center>
-      <div>
-        <div flex items-center>
-          <button
-            onClick={() => {
-              clearScreen()
-            }}>
-            clear
-          </button>
-          <button
-            onClick={() => {
-              args.current.pause = true
-              tick.current.stop()
-            }}>
-            pause
-          </button>
-          <button
-            onClick={() => {
-              args.current.gameStatus = 'pending'
-              args.current.pause = false
-              tick.current.start()
-            }}>
-            start
-          </button>
-          <div ml-10 w-30>
-            <ScoreCard score={args.current.score} />
-          </div>
-        </div>
-        <div flex flex-col w-fit border-2 border-solid border-light>
-          {matrix.slice(4).map((column, columnIndex) => (
-            <ul key={`${column}_${columnIndex}`} list-none flex>
-              {column.map((cell, rowIndex) => (
-                <li key={rowIndex}>
-                  {cell.value === 1 ? (
-                    <div bg-black h-5 w-5 border-1 border-solid border-gray></div>
-                  ) : (
-                    <div bg-white h-5 w-5 border-1 border-solid border-gray></div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ))}
-        </div>
-      </div>
-      <div ml-10>
-        <div w-40 h-40 flex items-center justify-center>
-          <CurrentCube cubeMatrix={args.current.nextCube as unknown as number[][]} />
-        </div>
-        <div w-50 flex flex-col mb-5>
-          <div mb-5>
-            <CurrentModeCard mode={mode} />
-          </div>
-          <div mb-1>mode: </div>
-          <button ml-5 mb-2 w-30 onClick={() => changeMode('easy')} disabled={args.current.gameStatus !== 'waiting'}>
-            easy
-          </button>
-          <button ml-5 mb-2 w-30 onClick={() => changeMode('normal')} disabled={args.current.gameStatus !== 'waiting'}>
-            normal
-          </button>
-          <button ml-5 mb-2 w-30 onClick={() => changeMode('hard')} disabled={args.current.gameStatus !== 'waiting'}>
-            hard
-          </button>
-        </div>
+    <div flex flex-col w-full p-2 onTouchEnd={() => (args.current.addSpeed = 0)}>
+      <div w-full min-w-0 pos-relative flex items-center>
         <div>
-          <div>↑：旋转</div>
-          <div>←：左移</div>
-          <div>→：右移</div>
-          <div>↓：加速</div>
-          <div>[space]：start/pause</div>
+          <div flex items-center justify-between>
+            <div>@Alkaidd</div>
+            <div ml-10 w-30>
+              <ScoreCard score={args.current.score} />
+            </div>
+          </div>
+          <div flex flex-col w-fit border-2 border-solid border-light>
+            {matrix.slice(4).map((column, columnIndex) => (
+              <ul key={`${column}_${columnIndex}`} list-none flex>
+                {column.map((cell, rowIndex) => (
+                  <li key={rowIndex}>
+                    {cell.value === 1 ? (
+                      <div bg-black h-5 w-5 border-1 border-solid border-gray></div>
+                    ) : (
+                      <div bg-white h-5 w-5 border-1 border-solid border-gray></div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+        <div ml-5 flex-1 min-w-0 pos-relative>
+          <div w-20 h-20 flex items-center justify-center>
+            <CurrentCube cubeMatrix={args.current.nextCube as unknown as number[][]} />
+          </div>
+          <div>
+            <div w-full flex flex-col mb-5>
+              <div mb-5>
+                <CurrentModeCard mode={mode} />
+              </div>
+              <div mb-1>mode: </div>
+              <button mb-2 w-20 onClick={() => changeMode('easy')} disabled={args.current.gameStatus !== 'waiting'}>
+                easy
+              </button>
+              <button mb-2 w-20 onClick={() => changeMode('normal')} disabled={args.current.gameStatus !== 'waiting'}>
+                normal
+              </button>
+              <button mb-2 w-20 onClick={() => changeMode('hard')} disabled={args.current.gameStatus !== 'waiting'}>
+                hard
+              </button>
+            </div>
+            <div>
+              <div>↑：旋转</div>
+              <div>←：左移</div>
+              <div>→：右移</div>
+              <div>↓：加速</div>
+              <div>[space]：start/pause</div>
+            </div>
+          </div>
         </div>
       </div>
+      {isMobile ? (
+        <div w-full h-fit p-2 mt-5 box-border border-solid border-2 rounded-2>
+          <div flex w-full justify-between items-center>
+            <div w-30 h-30 pos-relative>
+              <button
+                w-15
+                h-15
+                rounded-full
+                pos-absolute
+                top-0
+                left-0
+                onPointerDown={() => {
+                  args.current.pause = true
+                  tick.current.stop()
+                }}>
+                pause
+              </button>
+              <button
+                w-15
+                h-15
+                rounded-full
+                pos-absolute
+                bottom-0
+                right-0
+                onPointerDown={() => {
+                  args.current.gameStatus = 'pending'
+                  args.current.pause = false
+                  tick.current.start()
+                }}>
+                start
+              </button>
+            </div>
+            <div w-55 h-40 pos-relative>
+              <button pos-absolute w-15 h-10 top-0 left-20 rounded-full onPointerDown={arrowUp}>
+                ↑
+              </button>
+              <button pos-absolute w-15 h-10 top-15 right-0 rounded-full onPointerDown={arrowRight}>
+                →
+              </button>
+              <button pos-absolute w-15 h-10 bottom-0 left-20 rounded-full onPointerDown={arrowDown}>
+                ↓
+              </button>
+              <button pos-absolute w-15 h-10 top-15 left-0 rounded-full onPointerDown={arrowLeft}>
+                ←
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -454,7 +505,7 @@ function ScoreCard({ score }: { score: number }) {
 function CurrentModeCard(props: { mode: string }) {
   return (
     <>
-      current mode: <span color-blue>{props.mode}</span>
+      current: <span color-blue>{props.mode}</span>
     </>
   )
 }
@@ -467,9 +518,9 @@ function CurrentCube({ cubeMatrix }: ICurrentCube) {
           {column.map((cell, rowIndex) => (
             <li key={rowIndex}>
               {cell === 1 ? (
-                <div bg-black h-5 w-5 border-1 border-solid border-gray></div>
+                <div bg-black h-3 w-3 border-1 border-solid border-gray></div>
               ) : (
-                <div bg-white h-5 w-5 border-1 border-solid border-gray></div>
+                <div bg-white h-3 w-3 border-1 border-solid border-gray></div>
               )}
             </li>
           ))}

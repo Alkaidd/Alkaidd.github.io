@@ -15,7 +15,7 @@ polyfill()
 
 function App() {
   return (
-    <div w-full h-full flex items-center justify-center pos-relative>
+    <div w-100vw h-100vh overflow-hidden flex items-center justify-center pos-relative>
       <Moyu />
       <TetrisScreen />
     </div>

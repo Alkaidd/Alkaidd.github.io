@@ -5,6 +5,7 @@ export default function Moyu() {
   return (
     <div
       pos-absolute
+      z-10
       top-0
       left-0
       h-full
