@@ -2,3 +2,8 @@ body {
   padding: 0;
   margin: 0;
 }
+
+:root {
+  --nav-width: 300px;
+  --bottom-line-color: rgb(229, 234, 242);
+}
