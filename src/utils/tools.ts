@@ -64,4 +64,34 @@ export const isMobile = (function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 })()
 
+export function genTextByTick(text: string, step: number, cb: (text: string) => void) {
+  let newText = ''
+  let timer = setTimeout(() => void 0)
+  const setNewText = () => {
+    const newCha = text[newText.length]
+    const newStep = step + (Math.random() * 0.4 - 0.2) * step
+    if (newText.length < text.length) {
+      newText += newCha
+      if (newCha.match(/[\u{FF0C}\u{FF0E}\u{FF01}\u{FF1F},.!?]+/u)) {
+        timer = setTimeout(setNewText, newStep * 3)
+      } else {
+        timer = setTimeout(setNewText, newStep)
+      }
+    } else if (newText.length === text.length) {
+      newText += ' '
+      timer = setTimeout(setNewText, step * 20)
+    } else {
+      newText = ''
+      timer = setTimeout(setNewText, newStep)
+    }
+    cb(newText)
+  }
+
+  setNewText()
+
+  return () => {
+    clearTimeout(timer)
+  }
+}
+
 export type PixelType = { value: number; type: 'riverbed' | 'fish' }

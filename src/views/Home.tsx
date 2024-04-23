@@ -1,4 +1,7 @@
-import TetrisScreen from '@/components/Tetris'
+import { AlkaidRecommend } from '@/components/AlkaidRecommend'
+import { SideMenu } from '@/components/SideMenu'
+import SlowShowText from '@/components/SlowShowText'
+// import TetrisScreen from '@/components/Tetris'
 import { css } from '@emotion/react'
 
 const navStyle = css`
@@ -12,6 +15,9 @@ const menuStyle = css({
 const headerBarStyle = css({
   borderBottom: '1px solid var(--bottom-line-color)',
   height: '64px',
+  fontSize: '21px',
+  fontWeight: 700,
+  padding: '6px',
 })
 
 const headerStyle = css({
@@ -22,9 +28,11 @@ export default function Home() {
   return (
     <div flex w-full h-full>
       <nav css={navStyle} flex flex-col>
-        <div css={headerBarStyle}>nav</div>
+        <div css={headerBarStyle}>
+          <SlowShowText text={'你好，这里是Alkaid的小站。'} />
+        </div>
         <div flex-1 w-full css={menuStyle}>
-          menu
+          <SideMenu />
         </div>
       </nav>
       <header
@@ -38,10 +46,10 @@ export default function Home() {
         left-auto
         top-0
         right-0>
-        <div>head</div>
+        <div></div>
       </header>
-      <main flex-1>
-        <div>main</div>
+      <main flex-1 min-w-0 h-full>
+        <AlkaidRecommend />
       </main>
     </div>
   )
