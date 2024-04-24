@@ -26,16 +26,7 @@ export default function vitePluginMarkdown2Page(config?: Config): Plugin {
         return
       }
 
-      const files = await fs.promises.readdir(targetPath)
-
-      for (const file of files) {
-        if (fileRegex.test(file)) {
-          const filePath = path.join(targetPath, file)
-          const data = await fs.promises.readFile(filePath, 'utf8') // 直接读取为字符串
-          const html = markdown2jsx(data)
-          console.log(html)
-        }
-      }
+      await buildMarkdown2Jsx(targetPath)
 
       console.log('buildStart: markdown2page')
       if (myConfig.mode === 'serve') {
@@ -60,4 +51,21 @@ function markdown2jsx(markdown: string): string {
   // const html = 'test'
 
   return markdown
+}
+
+async function buildMarkdown2Jsx(targetPath: string) {
+  try {
+    const files = await fs.promises.readdir(targetPath)
+
+    for (const file of files) {
+      if (fileRegex.test(file)) {
+        const filePath = path.join(targetPath, file)
+        const data = await fs.promises.readFile(filePath, 'utf8')
+        const html = markdown2jsx(data)
+        console.log(html)
+      }
+    }
+  } catch (e) {
+    console.log(e)
+  }
 }
