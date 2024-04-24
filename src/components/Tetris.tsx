@@ -382,8 +382,9 @@ export default function TetrisScreen() {
     return () => {
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
+      clearScreen()
     }
-  })
+  }, [])
 
   return (
     <div flex flex-col w-full p-2 onTouchEnd={() => (args.current.addSpeed = 0)}>

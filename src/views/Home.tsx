@@ -31,7 +31,7 @@ export default function Home() {
         <div css={headerBarStyle}>
           <SlowShowText text={'你好，这里是Alkaid的小站。'} />
         </div>
-        <div flex-1 w-full css={menuStyle}>
+        <div flex-1 w-full css={menuStyle} z-1002>
           <SideMenu />
         </div>
       </nav>

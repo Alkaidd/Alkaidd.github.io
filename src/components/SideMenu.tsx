@@ -35,7 +35,7 @@ function getRandomPosition<T = Record<any, any>>(list: T[]): Array<T & { top: nu
     let randomRotateZ = Math.random() * 40 - 5
     let top = 20
     if (index > 0) {
-      top = newList[index - 1].top + 40
+      top = newList[index - 1].top + 50
       if (randomRotateZ - newList[index - 1].rotateZ > 10) {
         randomRotateZ -= 10
       }
@@ -66,17 +66,28 @@ export function SideMenu() {
     }
   }
 
+  function tidyPaper(flag: boolean) {
+    if (flag) {
+      setMenuList(menuList.map((item) => ({ ...item, rotateZ: item.rotateZ / 10 })))
+    } else {
+      setMenuList(getRandomPosition(menuList))
+    }
+  }
+
+  function clickItemMenu(name: string) {}
+
   useEffect(() => {
-    setMenuList(getRandomPosition(menuList))
+    setMenuList(getRandomPosition(menuList).map((item) => ({ ...item, rotateZ: item.rotateZ / 10 })))
   }, [])
 
   return (
-    <div h-full w-full pos-relative>
+    <div h-full w-full pos-relative onMouseEnter={() => tidyPaper(false)} onMouseLeave={() => tidyPaper(true)}>
       {menuList.map((item, index) => (
         <div
           key={item.name}
           onMouseEnter={() => setHoverItemTop(index, true)}
           onMouseLeave={() => setHoverItemTop(index, false)}
+          onClick={() => clickItemMenu(item.name)}
           h-full
           p-2
           pos-absolute
