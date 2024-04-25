@@ -14,7 +14,6 @@ import { type VFile } from 'vfile'
 import { type Root } from 'mdast'
 
 const fileRegex = /\.(md)$/
-let files = []
 
 export default function vitePluginMarkdown2Page(config?: Config): Plugin {
   const myConfig: {
@@ -31,7 +30,6 @@ export default function vitePluginMarkdown2Page(config?: Config): Plugin {
     },
     async buildStart() {
       let targetPath = ''
-      files = []
       if (config && config.target) {
         targetPath = path.join('src/assets/', config.target[0])
       } else {
@@ -96,7 +94,7 @@ async function buildMarkdown2Jsx(targetPath: string) {
     const files = await fs.promises.readdir(targetPath)
     const tempPath = 'src/components/article'
 
-    const fileIndex: string[] = []
+    const fileIndex: IndexTsFileInfo[] = []
     for (const file of files) {
       if (fileRegex.test(file)) {
         const filePath = path.join(targetPath, file)
@@ -107,7 +105,11 @@ async function buildMarkdown2Jsx(targetPath: string) {
         const newName = file.replace(fileRegex, '.tsx')
         await writeFileForce(tempPath, path.join(tempPath, newName), jsx)
 
-        fileIndex.push(newName)
+        fileIndex.push({
+          fullname: newName,
+          title: findH1Title(jsx),
+          abstract: findPAbstract(jsx),
+        })
       }
     }
 
@@ -182,11 +184,72 @@ async function clearDirectory(dirPath: string) {
   })
 }
 
-function getIndexTs(files: string[]) {
+type IndexTsFileInfo = {
+  fullname: string
+  title: string
+  abstract: string
+}
+function getIndexTs(files: IndexTsFileInfo[]) {
   let content = ''
-  files.forEach((filename) => {
-    content = content + `export { default as ` + filename.split('.')[0] + ` } from './` + filename + `'\n`
+  const filenames: string[] = []
+  // set import tsx
+  files.forEach((fileInfo, index) => {
+    filenames.push(fileInfo.fullname.split('.')[0])
+    content = content + `import { default as ` + filenames[index] + ` } from './` + fileInfo.fullname + `'\n`
   })
 
+  // set export fileInfo
+  content += '\n'
+  content += 'export const fileInfoList = [ \n'
+  content += files
+    .map((file, index) => {
+      return formatShallowObj({
+        name: filenames[index],
+        title: file.title,
+        abstract: file.abstract,
+      })
+    })
+    .join(',\n')
+  content += '\n]\n'
+
+  // set export all tsx
+  content += '\n'
+  content += 'export default { ' + filenames.join(', ') + ' }\n'
+
   return content
+}
+
+function findH1Title(htmlContent: string) {
+  // 使用正则表达式匹配第一个 <h1> 标签的内容
+  const regex = /<h1>(.*?)<\/h1>/
+  const match = regex.exec(htmlContent)
+  if (match) {
+    return match[1]
+  }
+  return ''
+}
+
+function findPAbstract(htmlContent: string) {
+  // 使用正则表达式匹配第一个 <h1> 标签的内容
+  const regex = /<p>(.*?)<\/p>/
+  const match = regex.exec(htmlContent)
+  if (match) {
+    return match[1]
+  }
+  return ''
+}
+
+function formatShallowObj(target: Record<string, string>): string {
+  let outputString = '{\n'
+  Object.keys(target).forEach((key, index, arr) => {
+    outputString += `  ${key}: '${target[key]}'`
+    if (index !== arr.length - 1) {
+      outputString += ',\n'
+    } else {
+      outputString += '\n'
+    }
+  })
+  outputString += '}'
+
+  return outputString
 }

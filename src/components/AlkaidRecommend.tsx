@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper'
 import Masonry from '@mui/lab/Masonry'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { fileInfoList } from './article'
 
 // const heights = [150, 30, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 30, 50, 80].map((item) => item * 2)
 
@@ -32,44 +33,16 @@ const recommendItems: RecommendItem[] = [
     img: '',
     abstract: '经典游戏，贪吃蛇。开发中...',
   },
-  {
-    name: '文章1',
-    img: null,
-    abstract: '测试文章摘要, 测试路由',
-    path: '/article',
-  },
-  {
-    name: '文章2',
-    img: null,
-    abstract: '测试文章摘要1， 测试路由',
-    path: '/article',
-  },
-  {
-    name: '文章3',
-    img: null,
-    abstract: '测试文章摘要2',
-  },
-  {
-    name: '文章4',
-    img: null,
-    abstract: '测试文章摘要4',
-  },
-  {
-    name: '文章5',
-    img: null,
-    abstract: '测试文章摘要5',
-  },
-  {
-    name: '文章6',
-    img: null,
-    abstract: '测试文章摘要6',
-  },
-  {
-    name: '文章7',
-    img: '',
-    abstract: '测试文章摘要7',
-  },
 ]
+
+fileInfoList.forEach((fileInfo) => {
+  recommendItems.push({
+    name: fileInfo.title,
+    img: null,
+    abstract: fileInfo.abstract,
+    path: '/article/' + fileInfo.name,
+  })
+})
 
 function getItemDefaultHeight(item: RecommendItem, width: number, fontSize: number): ComputedItem {
   const baseHeight = 120
@@ -132,7 +105,11 @@ function BasicMasonry(props: { width: number }) {
                 </div>
               ) : null}
               <div w-full style={{ borderTop: '1px solid var(--bottom-line-color)' }}>
-                <div text-lg>{item.name}</div>
+                <div flex justify-center>
+                  <div text-lg whitespace-nowrap overflow-hidden className='w-3/4' text-ellipsis>
+                    {item.name}
+                  </div>
+                </div>
                 <div>{item.abstract}</div>
               </div>
             </Item>
