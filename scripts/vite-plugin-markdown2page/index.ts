@@ -96,7 +96,7 @@ async function buildMarkdown2Jsx(targetPath: string) {
     const files = await fs.promises.readdir(targetPath)
     const tempPath = 'src/components/article'
 
-    const fileIndex = []
+    const fileIndex: string[] = []
     for (const file of files) {
       if (fileRegex.test(file)) {
         const filePath = path.join(targetPath, file)
