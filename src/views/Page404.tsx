@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 export default function Page404() {
   const navigate = useNavigate()
 
-  const goBack = () => {
+  const goBack = (event: any) => {
+    event.preventDefault()
     navigate(-1)
   }
   return (
@@ -13,7 +14,7 @@ export default function Page404() {
         <a href='/home' mr-2>
           home
         </a>
-        <a href='javascript:void(0);' role='button' onClick={goBack}>
+        <a href='#' role='button' onClick={goBack}>
           back
         </a>
       </div>

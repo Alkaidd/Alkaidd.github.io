@@ -206,7 +206,7 @@ export default function TetrisScreen() {
   }
 
   const clearScreen = () => {
-    tick.current.stop()
+    tick.current?.stop()
     args.current.score = 0
     args.current.currentSpeed = 1
     args.current.addSpeed = 0
@@ -272,7 +272,7 @@ export default function TetrisScreen() {
       }
     } else {
       initArgs()
-      tick.current.start()
+      tick.current?.start()
     }
 
     if (JSON.stringify(newMatrix) !== JSON.stringify(args.current.lastScreen)) {
@@ -282,7 +282,10 @@ export default function TetrisScreen() {
     }
   }
 
-  const tick = useRef(new Tick(tickEvent))
+  const tick = useRef<Tick | null>(null)
+  if (tick.current === null) {
+    tick.current = new Tick(tickEvent)
+  }
 
   const [mode, setMode] = useState<GameMode>('normal')
   function changeMode(mode: GameMode) {
@@ -306,11 +309,11 @@ export default function TetrisScreen() {
         moOrNot(false)
         args.current.gameStatus = 'pending'
         args.current.pause = false
-        tick.current.start()
+        tick.current?.start()
       } else {
         moOrNot(true)
         args.current.pause = true
-        tick.current.stop()
+        tick.current?.stop()
       }
     }
     if (args.current.pause) {
@@ -455,7 +458,7 @@ export default function TetrisScreen() {
                 left-0
                 onPointerDown={() => {
                   args.current.pause = true
-                  tick.current.stop()
+                  tick.current?.stop()
                 }}>
                 pause
               </button>
@@ -469,7 +472,7 @@ export default function TetrisScreen() {
                 onPointerDown={() => {
                   args.current.gameStatus = 'pending'
                   args.current.pause = false
-                  tick.current.start()
+                  tick.current?.start()
                 }}>
                 start
               </button>

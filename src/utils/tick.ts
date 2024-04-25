@@ -18,6 +18,7 @@ class Tick {
       reject: (reason?: any) => void,
     ) => void,
   ) {
+    // console.log('newed')
     this.lastTickTime = performance.now()
     this.ticks = 30
     this.tickLastTime = 1000 / this.ticks
