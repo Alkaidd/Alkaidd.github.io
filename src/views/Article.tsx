@@ -53,10 +53,9 @@ export default function Article() {
               return (
                 <Route
                   path={ArticleComName}
-                  key={index}
                   element={
                     <div p-2>
-                      <ArticleCom />
+                      <ArticleCom key={index} />
                     </div>
                   }
                 />

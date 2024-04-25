@@ -30,9 +30,9 @@ export default function SlowShowText(props: { text: string; step?: number }) {
   }, [props.text, props.step])
 
   return (
-    <span>
+    <div w-full whitespace-nowrap overflow-hidden flex justify-end pr-2>
       <span>{text}</span>
       {text.length >= props.text.length ? null : <FlashLine step={props.step ? props.step * 0.75 : 150} />}
-    </span>
+    </div>
   )
 }

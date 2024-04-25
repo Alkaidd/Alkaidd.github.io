@@ -7,8 +7,26 @@ import { useEffect } from 'react'
 import Page404 from './views/Page404'
 import GameDistribution from './views/Game'
 import Article from './views/Article'
+import { isMobile } from './utils/tools'
+import { changeCssVar } from './utils/theme'
 
 function App() {
+  useEffect(() => {
+    const handleIsMobile = () => {
+      changeCssVar(isMobile())
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      handleIsMobile()
+    })
+
+    resizeObserver.observe(window.document.body)
+
+    return () => {
+      resizeObserver.unobserve(window.document.body)
+    }
+  })
+
   const navigate = useNavigate()
   const location = useLocation()
 

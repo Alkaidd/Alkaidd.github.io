@@ -1,3 +1,4 @@
+import { isMobile } from '@/utils/tools'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -60,6 +61,7 @@ const menuMap: Record<string, string> = {
 export function SideMenu() {
   const [menuList, setMenuList] = useState(list)
   const [hoverTop, setHoverTop] = useState(0)
+  const [hoverRight, setHoverRight] = useState(0)
   const naviagte = useNavigate()
 
   function setHoverItemTop(index: number, hover: boolean) {
@@ -67,9 +69,15 @@ export function SideMenu() {
       const temp = menuList[index].top
       menuList[index].top = temp - 60
       setHoverTop(temp)
+      if (isMobile()) {
+        setHoverRight(-240)
+      }
     } else {
       menuList[index].top = hoverTop
       setHoverTop(0)
+      if (isMobile()) {
+        setHoverRight(0)
+      }
     }
   }
 
@@ -113,7 +121,8 @@ export function SideMenu() {
           style={{
             transform: `rotateZ(${item.rotateZ}deg)`,
             top: item.top,
-            width: `calc(var(--nav-width) - 20px)`,
+            right: hoverRight,
+            width: `calc(var(--side-item-width) - 20px)`,
             boxShadow: `10px 5px 10px rgba(0, 0, 0, 0.2)`,
             backgroundColor: `rgb(252, 250, 234)`,
             borderColor: `var(--paper-border-color)`,

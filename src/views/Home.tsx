@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <div flex w-full h-full>
       <nav css={navStyle} flex flex-col>
-        <div css={headerBarStyle}>
+        <div w-full box-border css={headerBarStyle}>
           <SlowShowText text={'你好，这里是Alkaid的小站。'} />
         </div>
         <div flex-1 w-full css={menuStyle} z-1002>
@@ -40,6 +40,7 @@ export default function Home() {
           ${headerStyle};
           ${headerBarStyle}
         `}
+        box-border
         backdrop-blur-8
         pos-fixed
         z-1001

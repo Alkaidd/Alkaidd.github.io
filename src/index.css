@@ -4,6 +4,7 @@ body {
 }
 
 :root {
+  --side-item-width: 300px;
   --nav-width: 300px;
   --bottom-line-color: rgb(229, 234, 242);
   --paper-border-color: rgb(150, 149, 147);

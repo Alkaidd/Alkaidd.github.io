@@ -5,6 +5,7 @@ import Masonry from '@mui/lab/Masonry'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fileInfoList } from './article'
+import { isMobile } from '@/utils/tools'
 
 // const heights = [150, 30, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 30, 50, 80].map((item) => item * 2)
 
@@ -82,6 +83,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function BasicMasonry(props: { width: number }) {
   const navigate = useNavigate()
+  const columnCount = isMobile() ? 2 : 4
 
   function handleClickItem(item: ComputedItem) {
     if (item.path) {
@@ -93,9 +95,9 @@ function BasicMasonry(props: { width: number }) {
 
   return (
     <Box sx={{ width: props.width, minHeight: 600 }}>
-      <Masonry columns={4} spacing={2}>
+      <Masonry columns={columnCount} spacing={2}>
         {recommendItems.map((item, index) => {
-          const newItem = getItemDefaultHeight(item, props.width / 4 - 16, 17)
+          const newItem = getItemDefaultHeight(item, props.width / columnCount - 16, 17)
           // console.log(index, newItem.height)
           return (
             <Item onClick={() => handleClickItem(newItem)} key={index} sx={{ height: newItem.height }}>
