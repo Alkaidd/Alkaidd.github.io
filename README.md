@@ -24,3 +24,8 @@
 pnpm i
 pnpm dev
 ```
+
+## publish the project
+```bash
+./script/bash/build.sh [commit type]: [commit message]
+```
