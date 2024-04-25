@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [
     UnoCSS(),
     Markdown2Page({
+      force: true,
       target: ['articles'],
     }),
     React(),

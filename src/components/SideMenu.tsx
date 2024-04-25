@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const list = [
   {
@@ -51,9 +52,15 @@ function getRandomPosition<T = Record<any, any>>(list: T[]): Array<T & { top: nu
   return newList
 }
 
+const menuMap: Record<string, string> = {
+  Article: '/article',
+  Game: '/moyu',
+}
+
 export function SideMenu() {
   const [menuList, setMenuList] = useState(list)
   const [hoverTop, setHoverTop] = useState(0)
+  const naviagte = useNavigate()
 
   function setHoverItemTop(index: number, hover: boolean) {
     if (hover) {
@@ -74,7 +81,13 @@ export function SideMenu() {
     }
   }
 
-  function clickItemMenu(name: string) {}
+  function clickItemMenu(name: string) {
+    if (menuMap[name]) {
+      naviagte(menuMap[name])
+    } else {
+      alert('开发中...')
+    }
+  }
 
   useEffect(() => {
     setMenuList(getRandomPosition(menuList).map((item) => ({ ...item, rotateZ: item.rotateZ / 10 })))

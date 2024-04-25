@@ -5,4 +5,4 @@
 段落1  
 段落2
 
-![测试图片](/public/static/tetris.png "测试图片标题")
+![测试图片](/static/tetris.png "测试图片标题")

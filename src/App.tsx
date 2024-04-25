@@ -6,6 +6,7 @@ import Home from './views/Home'
 import { useEffect } from 'react'
 import Page404 from './views/Page404'
 import GameDistribution from './views/Game'
+import Article from './views/Article'
 
 function App() {
   const navigate = useNavigate()
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         <Route path='/home/*' element={<Home />} />
         <Route path='/moyu/*' element={<GameDistribution />} />
+        <Route path='/article/*' element={<Article />} />
         <Route path='*' element={<Page404 />} />
       </Routes>
     </div>

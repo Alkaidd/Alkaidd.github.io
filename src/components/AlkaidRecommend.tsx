@@ -11,6 +11,7 @@ type RecommendItem = {
   name: string
   img: string | null
   abstract: string
+  path?: string
 }
 
 type ComputedItem = {
@@ -24,6 +25,7 @@ const recommendItems: RecommendItem[] = [
     name: '俄罗斯方块',
     img: '/static/tetris.png',
     abstract: '经典游戏，俄罗斯方块。',
+    path: '/moyu/tetris',
   },
   {
     name: '贪吃蛇',
@@ -33,12 +35,14 @@ const recommendItems: RecommendItem[] = [
   {
     name: '文章1',
     img: null,
-    abstract: '测试文章摘要',
+    abstract: '测试文章摘要, 测试路由',
+    path: '/article',
   },
   {
     name: '文章2',
     img: null,
-    abstract: '测试文章摘要1',
+    abstract: '测试文章摘要1， 测试路由',
+    path: '/article',
   },
   {
     name: '文章3',
@@ -107,8 +111,10 @@ function BasicMasonry(props: { width: number }) {
   const navigate = useNavigate()
 
   function handleClickItem(item: ComputedItem) {
-    if (item.name === '俄罗斯方块') {
-      navigate('/moyu/tetris')
+    if (item.path) {
+      navigate(item.path)
+    } else {
+      alert('还在开发中啦')
     }
   }
 
