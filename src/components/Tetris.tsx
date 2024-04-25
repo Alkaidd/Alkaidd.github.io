@@ -373,7 +373,7 @@ export default function TetrisScreen() {
   }
 
   useEffect(() => {
-    if (!isMobile) {
+    if (!isMobile()) {
       window.removeEventListener('keydown', onKeyDown)
       window.addEventListener('keydown', onKeyDown)
 
@@ -445,7 +445,7 @@ export default function TetrisScreen() {
           </div>
         </div>
       </div>
-      {isMobile ? (
+      {isMobile() ? (
         <div w-full h-fit p-2 mt-5 box-border border-solid border-2 rounded-2>
           <div flex w-full justify-between items-center>
             <div w-30 h-30 pos-relative>

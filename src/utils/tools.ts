@@ -60,9 +60,9 @@ export function rotateMatrix(matrix: number[][], degrees: number): number[][] {
   return newMatrix
 }
 
-export const isMobile = (function isMobileDevice() {
+export const isMobile = function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-})()
+}
 
 export function genTextByTick(text: string, step: number, cb: (text: string) => void) {
   let newText = ''
