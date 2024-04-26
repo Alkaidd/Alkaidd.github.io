@@ -52,7 +52,7 @@ export default function Article() {
             )
           }}
         />
-        <div h-full flex-1 overflow-auto>
+        <div h-full flex-1 overflow-auto mt--20 pt-20>
           <Routes>
             {ArticleComponentNames.map((ArticleComName, index) => {
               console.log('path', ArticleComName)

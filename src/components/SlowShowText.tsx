@@ -13,7 +13,7 @@ function FlashLine(props: { step: number }) {
       clearInterval(timer)
     }
   })
-  return <>{flag ? null : <span>_</span>}</>
+  return <span style={{ opacity: flag ? 1 : 0 }}>_</span>
 }
 
 export default function SlowShowText(props: { text: string; step?: number }) {
