@@ -73,6 +73,10 @@ export function SideMenu() {
     } else {
       menuList[index].top = hoverTop
       setHoverTop(0)
+      if (isMobile()) {
+        setHoverRight(0)
+        collapse.current = true
+      }
     }
   }
 

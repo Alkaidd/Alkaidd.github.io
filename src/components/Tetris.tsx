@@ -390,7 +390,7 @@ export default function TetrisScreen() {
   }, [])
 
   return (
-    <div flex flex-col w-full p-2 onTouchEnd={() => (args.current.addSpeed = 0)}>
+    <div flex flex-col w-full p-2 box-border onTouchEnd={() => (args.current.addSpeed = 0)}>
       <div w-full min-w-0 pos-relative flex items-center>
         <div>
           <div flex items-center justify-between>
