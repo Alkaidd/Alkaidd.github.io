@@ -1,5 +1,5 @@
 import NavTitle from '@/components/NavTitle'
-import TetrisScreen from '@/components/Tetris'
+import TetrisScreen from '@/components/games/Tetris'
 import { Routes, Route } from 'react-router-dom'
 
 export default function GameDistribution() {
