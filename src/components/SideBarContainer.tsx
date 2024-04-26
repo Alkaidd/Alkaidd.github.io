@@ -76,7 +76,9 @@ export default function SideBarContianer(props: { content: React.ComponentType }
           w-fit
           h-full
           left-0
-          onClick={(e) => e.stopPropagation()}
+          onClick={() => {
+            setCollapse(false)
+          }}
           style={{ position: isMobile() ? 'absolute' : 'unset' }}>
           <Content />
         </div>
