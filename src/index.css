@@ -10,3 +10,9 @@ body {
   --paper-border-color: rgb(150, 149, 147);
   --hover-bg-color: rgba(74, 90, 112, .06);
 }
+
+.article img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
