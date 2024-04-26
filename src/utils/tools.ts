@@ -94,4 +94,8 @@ export function genTextByTick(text: string, step: number, cb: (text: string) => 
   }
 }
 
+export function getRandomNumber(number: number) {
+  return Math.floor(Math.random() * number)
+}
+
 export type PixelType = { value: number; type: 'riverbed' | 'fish' }
