@@ -22,7 +22,7 @@ class Snake {
 
   constructor(x: number, y: number) {
     this.screen = new Array(x).fill(null).map(() => new Array(y).fill(0))
-    this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
+    this.snake = [{ position: { x: this.getRandomNumberAvoidSides(x), y: this.getRandomNumberAvoidSides(y) } }]
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
     this.lastSnakeDirection = 'top'
@@ -31,11 +31,16 @@ class Snake {
     this.overStatus = ''
   }
 
+  getRandomNumberAvoidSides(n: number) {
+    const rand = getRandomNumber(n)
+    return Math.floor(rand / 2) + 3
+  }
+
   reset() {
     this.clearScreen(true)
     const x = this.screen.length
     const y = this.screen[0].length
-    this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
+    this.snake = [{ position: { x: this.getRandomNumberAvoidSides(x), y: this.getRandomNumberAvoidSides(y) } }]
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
     this.lastSnakeDirection = 'top'
