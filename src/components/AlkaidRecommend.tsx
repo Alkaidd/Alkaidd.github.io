@@ -32,7 +32,8 @@ const recommendItems: RecommendItem[] = [
   {
     name: '贪吃蛇',
     img: '',
-    abstract: '经典游戏，贪吃蛇。开发中...',
+    abstract: '经典游戏，贪吃蛇。',
+    path: '/moyu/snake',
   },
 ]
 

@@ -1,3 +1,4 @@
+import { useMoyuStore } from '@/hooks/store'
 import Tick from '@/utils/tick'
 import { getRandomNumber, isMobile } from '@/utils/tools'
 import { useEffect, useRef, useState } from 'react'
@@ -12,6 +13,7 @@ class Snake {
   snakeMap: Record<string, boolean>
   // excuteList: Array<() => void>
   snakeDirection: 'top' | 'right' | 'left' | 'bottom'
+  gameOver: boolean
 
   constructor(x: number, y: number) {
     this.screen = new Array(x).fill(null).map(() => new Array(y).fill(0))
@@ -19,6 +21,18 @@ class Snake {
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
     this.snakeDirection = 'top'
+    this.gameOver = false
+  }
+
+  reset() {
+    this.clearScreen(true)
+    const x = this.screen.length
+    const y = this.screen[0].length
+    this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
+    this.snakeMap = this.getSnakeMap()
+    this.food = this.genFood(x, y)
+    this.snakeDirection = 'top'
+    this.gameOver = false
   }
 
   getSnakeMap() {
@@ -43,7 +57,15 @@ class Snake {
     return { x, y }
   }
 
-  clearScreen() {
+  clearScreen(flag?: boolean) {
+    if (flag) {
+      this.screen.forEach((column) => {
+        column.forEach((cell, rawIndex) => {
+          column[rawIndex] = 0
+        })
+      })
+      return
+    }
     this.screen[this.food.position.x][this.food.position.y] = 0
 
     this.snake.forEach((node) => {
@@ -101,9 +123,11 @@ class Snake {
     }
 
     if (head.position.x < 0 || head.position.x >= this.screen.length) {
+      this.gameOver = true
       return []
     }
     if (head.position.y < 0 || head.position.y >= this.screen[0].length) {
+      this.gameOver = true
       return []
     }
 
@@ -112,8 +136,14 @@ class Snake {
       return this.snake
     }
 
-    //
+    // 无法移动的方向
     if (this.snake[1].position.x === head.position.x && this.snake[1].position.y === head.position.y) {
+      return []
+    }
+
+    // 吃到自己身体了
+    if (this.snakeMap[`${head.position.x}${head.position.y}`]) {
+      this.gameOver = true
       return []
     }
 
@@ -128,32 +158,64 @@ const snake = new Snake(24, 12)
 export default function SnakeGame() {
   const [screen, setScreen] = useState(structuredClone(snake.screen))
   useEffect(() => {
-    snake.start()
-    setScreen(structuredClone(snake.screen))
-    tick.current?.start()
+    resetGame()
   }, [])
 
   const args = useRef({
     lastTickTime: 0,
+    currentSpeed: 1,
+    fullSpeed: 10,
+    speedStep: 0.0005,
+    pause: true,
+    gameStatus: 'waiting',
   })
+  const snakeMove = (nowTicktime: number) => {
+    snake.next()
+    const newScreenStr = JSON.stringify(snake.screen)
+    if (newScreenStr !== JSON.stringify(screen)) {
+      setScreen(JSON.parse(newScreenStr))
+    }
+    args.current.lastTickTime = nowTicktime
+    if (snake.gameOver) {
+      tick.current?.stop()
+      alert('game over')
+      resetGame()
+    }
+  }
   const tickEvent = (_: number, nowTicktime: number) => {
-    if (nowTicktime - args.current.lastTickTime > 1000) {
-      snake.next()
-      console.log('snake next')
-      const newScreenStr = JSON.stringify(snake.screen)
-      if (newScreenStr !== JSON.stringify(screen)) {
-        setScreen(JSON.parse(newScreenStr))
-      }
-      args.current.lastTickTime = nowTicktime
+    if (nowTicktime && args.current.currentSpeed < args.current.fullSpeed && args.current.lastTickTime >= 1000) {
+      args.current.currentSpeed += args.current.speedStep
+    }
+    if (nowTicktime - args.current.lastTickTime > 1000 / args.current.currentSpeed) {
+      snakeMove(nowTicktime)
     }
   }
   const tick = useRef<Tick | null>(null)
   if (tick.current === null) {
     tick.current = new Tick(tickEvent)
   }
+  function resetGame() {
+    snake.reset()
+    snake.start()
+    setScreen(structuredClone(snake.screen))
+  }
 
+  const moOrNot = useMoyuStore((state) => state.moOrNot)
   function onKeyDown(event: KeyboardEvent) {
     if (event.key === ' ') {
+      if (args.current.pause) {
+        moOrNot(false)
+        args.current.gameStatus = 'pending'
+        args.current.pause = false
+        tick.current?.start()
+      } else {
+        moOrNot(true)
+        args.current.pause = true
+        tick.current?.stop()
+      }
+    }
+    if (args.current.pause) {
+      return
     }
 
     if (event.key === 'ArrowUp') {
@@ -169,6 +231,7 @@ export default function SnakeGame() {
       // 右箭头键
       snake.snakeDirection = 'right'
     }
+    snakeMove(performance.now())
     // 这里可以添加处理其他按键的逻辑
   }
 
