@@ -3,6 +3,8 @@ import Tick from '@/utils/tick'
 import { getRandomNumber, isMobile } from '@/utils/tools'
 import { useEffect, useRef, useState } from 'react'
 import ScoreCard from './ScoreCard'
+import JoyConMini from './JoyConMini'
+import ScreenContainer from './ScreenContainer'
 
 class Snake {
   // 0: space
@@ -20,9 +22,7 @@ class Snake {
 
   constructor(x: number, y: number) {
     this.screen = new Array(x).fill(null).map(() => new Array(y).fill(0))
-    this.snake = [
-      { position: { x: x - Math.floor(getRandomNumber(x) / 2), y: Math.floor(y - getRandomNumber(y) / 2) } },
-    ]
+    this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
     this.lastSnakeDirection = 'top'
@@ -35,9 +35,7 @@ class Snake {
     this.clearScreen(true)
     const x = this.screen.length
     const y = this.screen[0].length
-    this.snake = [
-      { position: { x: x - Math.floor(getRandomNumber(x) / 2), y: Math.floor(y - getRandomNumber(y) / 2) } },
-    ]
+    this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
     this.lastSnakeDirection = 'top'
@@ -324,26 +322,59 @@ export default function SnakeGame() {
     }
   }, [])
   return (
-    <div>
-      <div className='snake-screen' w-fit>
+    <div h-full>
+      <div className='snake-screen' h-full w-full flex flex-col items-center w-fit min-h-0>
         <ScoreCard score={args.current.score} />
-        {screen.map((column, columnIndex) => (
-          <ul key={`${column}_${columnIndex}`} list-none flex>
-            {column.map((cell, rowIndex) => (
-              <li key={rowIndex}>
-                {cell === 0 ? (
-                  <div bg-white h-5 w-5 border-1 border-solid border-gray></div>
-                ) : cell === 1 ? (
-                  <SnakeNode type={snake.getSnakeBodyStatus(snake.getNodeIndex(columnIndex, rowIndex))} />
-                ) : (
-                  <div bg-white h-5 w-5 border-1 border-solid border-gray>
-                    <div bg-pink h-full w-full rounded-2></div>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        ))}
+        <ScreenContainer
+          content={() =>
+            screen.map((column, columnIndex) => (
+              <ul key={`${column}_${columnIndex}`} list-none flex>
+                {column.map((cell, rowIndex) => (
+                  <li key={rowIndex}>
+                    {cell === 0 ? (
+                      <div bg-white h-5 w-5 border-1 border-solid border-gray></div>
+                    ) : cell === 1 ? (
+                      <SnakeNode type={snake.getSnakeBodyStatus(snake.getNodeIndex(columnIndex, rowIndex))} />
+                    ) : (
+                      <div bg-white h-5 w-5 border-1 border-solid border-gray>
+                        <div bg-pink h-full w-full rounded-2></div>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ))
+          }
+        />
+        {isMobile() ? (
+          <JoyConMini
+            onButton1Down={() => {
+              args.current.pause = true
+              tick.current?.stop()
+            }}
+            onButton2Down={() => {
+              args.current.gameStatus = 'pending'
+              args.current.pause = false
+              tick.current?.start()
+            }}
+            onArrowUP={() => {
+              snake.snakeDirection = 'top'
+              snakeMove(performance.now())
+            }}
+            onArrowDown={() => {
+              snake.snakeDirection = 'bottom'
+              snakeMove(performance.now())
+            }}
+            onArrowLeft={() => {
+              snake.snakeDirection = 'left'
+              snakeMove(performance.now())
+            }}
+            onArrowRight={() => {
+              snake.snakeDirection = 'right'
+              snakeMove(performance.now())
+            }}
+          />
+        ) : null}
       </div>
     </div>
   )
