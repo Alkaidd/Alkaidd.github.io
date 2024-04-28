@@ -2,6 +2,7 @@ import { useMoyuStore } from '@/hooks/store'
 import Tick from '@/utils/tick'
 import { getRandomNumber, isMobile } from '@/utils/tools'
 import { useEffect, useRef, useState } from 'react'
+import ScoreCard from './ScoreCard'
 
 class Snake {
   // 0: space
@@ -10,18 +11,22 @@ class Snake {
   screen: number[][]
   snake: { position: { x: number; y: number } }[]
   food: { position: { x: number; y: number } }
-  snakeMap: Record<string, boolean>
+  snakeMap: Record<string, number>
   // excuteList: Array<() => void>
+  lastSnakeDirection: 'top' | 'right' | 'left' | 'bottom'
   snakeDirection: 'top' | 'right' | 'left' | 'bottom'
   gameOver: boolean
+  overStatus: 'wall' | 'eatSelf' | ''
 
   constructor(x: number, y: number) {
     this.screen = new Array(x).fill(null).map(() => new Array(y).fill(0))
     this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
+    this.lastSnakeDirection = 'top'
     this.snakeDirection = 'top'
     this.gameOver = false
+    this.overStatus = ''
   }
 
   reset() {
@@ -31,14 +36,16 @@ class Snake {
     this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
+    this.lastSnakeDirection = 'top'
     this.snakeDirection = 'top'
     this.gameOver = false
+    this.overStatus = ''
   }
 
   getSnakeMap() {
     const tempMap: Snake['snakeMap'] = {}
-    this.snake.forEach((node) => {
-      tempMap[`${node.position.x}${node.position.y}`] = true
+    this.snake.forEach((node, index) => {
+      tempMap[`${node.position.x}${node.position.y}`] = index
     })
     return tempMap
   }
@@ -55,6 +62,33 @@ class Snake {
     const x = getRandomNumber(xLimit)
     const y = getRandomNumber(yLimit)
     return { x, y }
+  }
+
+  getNodeIndex(columnIndex: number, rowIndex: number) {
+    const index = this.getSnakeMap()[`${columnIndex}${rowIndex}`]
+    return index
+  }
+
+  getSnakeBodyStatus(index: number) {
+    if (index < 0 || index >= this.snake.length) {
+      return []
+    }
+
+    if (index === 0) {
+      return []
+    }
+
+    if (index === this.snake.length - 1) {
+      const pre = this.snake[index - 1].position
+      const cur = this.snake[index].position
+      return [pre.x - cur.x, pre.y - cur.y]
+    }
+
+    const pre = this.snake[index - 1].position
+    const cur = this.snake[index].position
+    const next = this.snake[index + 1].position
+
+    return [pre.x - cur.x, pre.y - cur.y, next.x - cur.x, next.y - cur.y]
   }
 
   clearScreen(flag?: boolean) {
@@ -92,11 +126,15 @@ class Snake {
     const tail = this.snake[this.snake.length - 1]
     this.moveSnake(this.snakeDirection)
     this.snakeMap = this.getSnakeMap()
-    if (this.snakeMap[`${this.food.position.x}${this.food.position.y}`]) {
+
+    let eat = false
+    if (Reflect.has(this.snakeMap, `${this.food.position.x}${this.food.position.y}`)) {
       this.snake.push(tail)
       this.food = this.genFood(this.screen.length, this.screen[0].length)
+      eat = true
     }
-    return this.composeScreen()
+    this.composeScreen()
+    return eat
   }
 
   moveSnake(direction: Snake['snakeDirection'] | null): Snake['snake'] {
@@ -106,7 +144,6 @@ class Snake {
 
     const head = structuredClone(this.snake[0])
     // const snakeMap = this.getSankeMap()
-
     switch (direction) {
       case 'top':
         head.position.x -= 1
@@ -123,29 +160,41 @@ class Snake {
     }
 
     if (head.position.x < 0 || head.position.x >= this.screen.length) {
+      console.log('crash x wall')
+      this.overStatus = 'wall'
       this.gameOver = true
       return []
     }
     if (head.position.y < 0 || head.position.y >= this.screen[0].length) {
+      console.log('crash y wall')
+      this.overStatus = 'wall'
       this.gameOver = true
       return []
     }
 
     if (this.snake.length < 2) {
+      this.lastSnakeDirection = this.snakeDirection
       this.snake[0] = head
       return this.snake
     }
 
     // 无法移动的方向
     if (this.snake[1].position.x === head.position.x && this.snake[1].position.y === head.position.y) {
+      this.snakeDirection = this.lastSnakeDirection
+      this.moveSnake(this.snakeDirection)
       return []
     }
 
     // 吃到自己身体了
-    if (this.snakeMap[`${head.position.x}${head.position.y}`]) {
+    if (Reflect.has(this.snakeMap, `${head.position.x}${head.position.y}`)) {
+      console.log('eat self')
+      this.overStatus = 'eatSelf'
+
       this.gameOver = true
       return []
     }
+
+    this.lastSnakeDirection = this.snakeDirection
 
     this.snake.pop()
     this.snake.unshift(head)
@@ -159,6 +208,9 @@ export default function SnakeGame() {
   const [screen, setScreen] = useState(structuredClone(snake.screen))
   useEffect(() => {
     resetGame()
+    return () => {
+      setScreen(structuredClone(snake.screen))
+    }
   }, [])
 
   const args = useRef({
@@ -166,11 +218,15 @@ export default function SnakeGame() {
     currentSpeed: 1,
     fullSpeed: 10,
     speedStep: 0.0005,
+    score: 0,
     pause: true,
     gameStatus: 'waiting',
   })
   const snakeMove = (nowTicktime: number) => {
-    snake.next()
+    const eat = snake.next()
+    if (eat) {
+      args.current.score += args.current.currentSpeed * (1 + snake.snake.length / 10) * 20
+    }
     const newScreenStr = JSON.stringify(snake.screen)
     if (newScreenStr !== JSON.stringify(screen)) {
       setScreen(JSON.parse(newScreenStr))
@@ -178,7 +234,15 @@ export default function SnakeGame() {
     args.current.lastTickTime = nowTicktime
     if (snake.gameOver) {
       tick.current?.stop()
-      alert('game over')
+      let info = `GAME OVER! SCORE: ${Math.floor(args.current.score)}`
+      if (args.current.score < 30000) {
+        if (snake.overStatus === 'wall') {
+          info = '别灰心,猪也撞树上了~' + info
+        } else if (snake.overStatus === 'eatSelf') {
+          info = '别灰心,驴也是这么想的~' + info
+        }
+      }
+      window.alert(info)
       resetGame()
     }
   }
@@ -196,6 +260,7 @@ export default function SnakeGame() {
   }
   function resetGame() {
     snake.reset()
+    args.current.score = 0
     snake.start()
     setScreen(structuredClone(snake.screen))
   }
@@ -231,7 +296,10 @@ export default function SnakeGame() {
       // 右箭头键
       snake.snakeDirection = 'right'
     }
-    snakeMove(performance.now())
+    // console.log(snake.lastSnakeDirection, snake.snakeDirection)
+    if (snake.snakeDirection === snake.lastSnakeDirection) {
+      snakeMove(performance.now())
+    }
     // 这里可以添加处理其他按键的逻辑
   }
 
@@ -255,7 +323,8 @@ export default function SnakeGame() {
   }, [])
   return (
     <div>
-      <div className='snake-screen'>
+      <div className='snake-screen' w-fit>
+        <ScoreCard score={args.current.score} />
         {screen.map((column, columnIndex) => (
           <ul key={`${column}_${columnIndex}`} list-none flex>
             {column.map((cell, rowIndex) => (
@@ -263,10 +332,10 @@ export default function SnakeGame() {
                 {cell === 0 ? (
                   <div bg-white h-5 w-5 border-1 border-solid border-gray></div>
                 ) : cell === 1 ? (
-                  <div bg-black h-5 w-5 border-1 border-solid border-gray></div>
+                  <SnakeNode type={snake.getSnakeBodyStatus(snake.getNodeIndex(columnIndex, rowIndex))} />
                 ) : (
                   <div bg-white h-5 w-5 border-1 border-solid border-gray>
-                    <div bg-black h-full w-full rounded-2></div>
+                    <div bg-pink h-full w-full rounded-2></div>
                   </div>
                 )}
               </li>
@@ -274,6 +343,63 @@ export default function SnakeGame() {
           </ul>
         ))}
       </div>
+    </div>
+  )
+}
+
+function SnakeNode({ type }: { type: number[] }) {
+  if (type.length === 4) {
+    return SnakeBodyNode(type)
+  }
+
+  if (type.length === 2) {
+    return SnakeTail(type)
+  }
+
+  return <div bg-black h-5 w-5 border-1 border-solid border-gray></div>
+}
+
+function SnakeTail(type: number[]) {
+  const [x, y] = type
+
+  const D = `M 100,100 L ${100 + y * 100},${100 + x * 100}`
+
+  return (
+    <div bg-white h-5 w-5 border-1 border-solid border-gray>
+      <svg width='100%' height='100%' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'>
+        <path d={D} stroke='black' fill='none' strokeWidth='100'></path>
+      </svg>
+    </div>
+  )
+}
+
+function SnakeBodyNode(type: number[]) {
+  const [x, y] = [type[0] + type[2], type[1] + type[3]]
+  let deg = 0
+  if (x === -1 && y === 1) {
+    deg = 90
+  } else if (x === -1 && y == -1) {
+    deg = 360
+  } else if (x === 1 && y === -1) {
+    deg = 270
+  } else if (x === 1 && y === 1) {
+    deg = 180
+  }
+
+  const isRaw = type[0] === type[2] ? false : true
+
+  return (
+    <div bg-white h-5 w-5 border-1 border-solid border-gray style={{ transform: `rotate(${deg}deg)` }}>
+      <svg width='100%' height='100%' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'>
+        {deg !== 0 ? (
+          // (0, 0)四分之一圆心
+          <path d='M 100,0 A 100,100 0,0,1 0,100' stroke='black' fill='none' strokeWidth='140'></path>
+        ) : isRaw ? (
+          <path d='M 100,0 L 100,200' stroke='black' fill='none' strokeWidth='140'></path>
+        ) : (
+          <path d='M 0,100 L 200,100' stroke='black' fill='none' strokeWidth='140'></path>
+        )}
+      </svg>
     </div>
   )
 }

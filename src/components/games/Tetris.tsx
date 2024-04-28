@@ -4,6 +4,7 @@ import { genMatrix, horizontalFlip, PixelType, rotateMatrix, isMobile } from '@/
 import { useEffect, useRef, useState } from 'react'
 import Tick from '@/utils/tick'
 import { useMoyuStore } from '@/hooks/store'
+import ScoreCard from './ScoreCard'
 
 const width = 12
 const height = 24
@@ -393,12 +394,7 @@ export default function TetrisScreen() {
     <div flex flex-col w-full p-2 box-border onTouchEnd={() => (args.current.addSpeed = 0)}>
       <div w-full min-w-0 pos-relative flex items-center>
         <div>
-          <div flex items-center justify-between>
-            <div>@Alkaidd</div>
-            <div ml-10 w-30>
-              <ScoreCard score={args.current.score} />
-            </div>
-          </div>
+          <ScoreCard score={args.current.score} />
           <div flex flex-col w-fit border-2 border-solid border-light>
             {matrix.slice(4).map((column, columnIndex) => (
               <ul key={`${column}_${columnIndex}`} list-none flex>
@@ -495,14 +491,6 @@ export default function TetrisScreen() {
         </div>
       ) : null}
     </div>
-  )
-}
-
-function ScoreCard({ score }: { score: number }) {
-  return (
-    <>
-      <span w-full>score: {Math.floor(score)}</span>
-    </>
   )
 }
 

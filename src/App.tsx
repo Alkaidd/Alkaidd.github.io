@@ -39,7 +39,7 @@ function App() {
 
   return (
     <div w-100vw h-100vh overflow-hidden flex items-center justify-center pos-relative>
-      <Moyu />
+      {import.meta.env.MODE === 'development' ? null : <Moyu />}
       <Routes>
         <Route path='/home/*' element={<Home />} />
         <Route path='/moyu/*' element={<GameDistribution />} />
