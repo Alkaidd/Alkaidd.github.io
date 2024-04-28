@@ -20,7 +20,9 @@ class Snake {
 
   constructor(x: number, y: number) {
     this.screen = new Array(x).fill(null).map(() => new Array(y).fill(0))
-    this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
+    this.snake = [
+      { position: { x: x - Math.floor(getRandomNumber(x) / 2), y: Math.floor(y - getRandomNumber(y) / 2) } },
+    ]
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
     this.lastSnakeDirection = 'top'
@@ -33,7 +35,9 @@ class Snake {
     this.clearScreen(true)
     const x = this.screen.length
     const y = this.screen[0].length
-    this.snake = [{ position: { x: getRandomNumber(x), y: getRandomNumber(y) } }]
+    this.snake = [
+      { position: { x: x - Math.floor(getRandomNumber(x) / 2), y: Math.floor(y - getRandomNumber(y) / 2) } },
+    ]
     this.snakeMap = this.getSnakeMap()
     this.food = this.genFood(x, y)
     this.lastSnakeDirection = 'top'
@@ -215,8 +219,8 @@ export default function SnakeGame() {
 
   const args = useRef({
     lastTickTime: 0,
-    currentSpeed: 1,
-    fullSpeed: 10,
+    currentSpeed: 4,
+    fullSpeed: 20,
     speedStep: 0.0005,
     score: 0,
     pause: true,
@@ -296,10 +300,8 @@ export default function SnakeGame() {
       // 右箭头键
       snake.snakeDirection = 'right'
     }
-    // console.log(snake.lastSnakeDirection, snake.snakeDirection)
-    if (snake.snakeDirection === snake.lastSnakeDirection) {
-      snakeMove(performance.now())
-    }
+
+    snakeMove(performance.now())
     // 这里可以添加处理其他按键的逻辑
   }
 
