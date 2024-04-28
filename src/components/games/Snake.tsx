@@ -45,14 +45,14 @@ class Snake {
   getSnakeMap() {
     const tempMap: Snake['snakeMap'] = {}
     this.snake.forEach((node, index) => {
-      tempMap[`${node.position.x}${node.position.y}`] = index
+      tempMap[`${node.position.x}-${node.position.y}`] = index
     })
     return tempMap
   }
 
   genFood(x: number, y: number) {
     let position = this.genRandomPosition(x, y)
-    while (Reflect.has(this.snakeMap, `${position.x}${position.y}`)) {
+    while (Reflect.has(this.snakeMap, `${position.x}-${position.y}`)) {
       position = this.genRandomPosition(x, y)
     }
     return { position }
@@ -65,7 +65,7 @@ class Snake {
   }
 
   getNodeIndex(columnIndex: number, rowIndex: number) {
-    const index = this.getSnakeMap()[`${columnIndex}${rowIndex}`]
+    const index = this.getSnakeMap()[`${columnIndex}-${rowIndex}`]
     return index
   }
 
@@ -128,7 +128,7 @@ class Snake {
     this.snakeMap = this.getSnakeMap()
 
     let eat = false
-    if (Reflect.has(this.snakeMap, `${this.food.position.x}${this.food.position.y}`)) {
+    if (Reflect.has(this.snakeMap, `${this.food.position.x}-${this.food.position.y}`)) {
       this.snake.push(tail)
       this.food = this.genFood(this.screen.length, this.screen[0].length)
       eat = true
@@ -186,7 +186,7 @@ class Snake {
     }
 
     // 吃到自己身体了
-    if (Reflect.has(this.snakeMap, `${head.position.x}${head.position.y}`)) {
+    if (Reflect.has(this.snakeMap, `${head.position.x}-${head.position.y}`)) {
       console.log('eat self')
       this.overStatus = 'eatSelf'
 
