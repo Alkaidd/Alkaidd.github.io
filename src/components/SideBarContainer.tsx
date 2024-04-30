@@ -2,6 +2,7 @@ import { useConfigStore } from '@/hooks/store'
 import { css } from '@emotion/react'
 import { useEffect, useRef, useState } from 'react'
 
+// todo: forbid collapse while mobile
 export default function SideBarContianer(props: { content: React.ComponentType }) {
   const [containerCss, setCss] = useState(css({}))
   const collapse = useRef(true)
