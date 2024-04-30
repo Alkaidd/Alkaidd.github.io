@@ -1,6 +1,6 @@
-import { useMoyuStore } from '@/hooks/store'
+import { useConfigStore, useMoyuStore } from '@/hooks/store'
 import Tick from '@/utils/tick'
-import { getRandomNumber, isMobile } from '@/utils/tools'
+import { getRandomNumber } from '@/utils/tools'
 import { useEffect, useRef, useState } from 'react'
 import ScoreCard from './ScoreCard'
 import JoyConMini from './JoyConMini'
@@ -310,8 +310,10 @@ export default function SnakeGame() {
 
   function onKeyUp(event: KeyboardEvent) {}
 
+  const mobileFlag = useConfigStore((state) => state.mobileFlag)
+
   useEffect(() => {
-    if (!isMobile()) {
+    if (!mobileFlag) {
       window.removeEventListener('keydown', onKeyDown)
       window.addEventListener('keydown', onKeyDown)
 
@@ -351,7 +353,7 @@ export default function SnakeGame() {
             ))
           }
         />
-        {isMobile() ? (
+        {mobileFlag ? (
           <JoyConMini
             onButton1Down={() => {
               args.current.pause = true

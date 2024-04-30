@@ -1,4 +1,4 @@
-import { isMobile } from '@/utils/tools'
+import { useConfigStore } from '@/hooks/store'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -56,6 +56,7 @@ function getRandomPosition<T = Record<any, any>>(list: T[]): Array<T & { top: nu
 const menuMap: Record<string, string> = {
   Article: '/article',
   Game: '/moyu',
+  Introduce: '/introduce',
 }
 
 export function SideMenu() {
@@ -65,6 +66,8 @@ export function SideMenu() {
   const collapse = useRef(true)
   const naviagte = useNavigate()
 
+  const mobileFlag = useConfigStore((state) => state.mobileFlag)
+
   function setHoverItemTop(index: number, hover: boolean) {
     if (hover) {
       const temp = menuList[index].top
@@ -73,7 +76,7 @@ export function SideMenu() {
     } else {
       menuList[index].top = hoverTop
       setHoverTop(0)
-      if (isMobile()) {
+      if (mobileFlag) {
         setHoverRight(0)
         collapse.current = true
       }
@@ -92,7 +95,7 @@ export function SideMenu() {
     if (!name) {
       return
     }
-    if (isMobile()) {
+    if (mobileFlag) {
       if (collapse.current) {
         setHoverRight(-240)
         collapse.current = false

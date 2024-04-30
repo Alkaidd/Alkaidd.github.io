@@ -1,4 +1,4 @@
-import { isMobile } from '@/utils/tools'
+import { useConfigStore } from '@/hooks/store'
 import { css } from '@emotion/react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -7,8 +7,10 @@ export default function SideBarContianer(props: { content: React.ComponentType }
   const collapse = useRef(true)
   const Content = props.content
 
+  const mobileFlag = useConfigStore((state) => state.mobileFlag)
+
   function setCollapse(flag: boolean) {
-    if (!isMobile()) {
+    if (!mobileFlag) {
       return
     }
     if (!flag) {
@@ -30,12 +32,12 @@ export default function SideBarContianer(props: { content: React.ComponentType }
     collapse.current = flag
   }
   useEffect(() => {
-    if (isMobile()) {
+    if (mobileFlag) {
       setCollapse(true)
     }
   }, [])
   return (
-    <div h-full pos-relative style={{ width: isMobile() ? '0' : 'fit-content' }}>
+    <div h-full pos-relative style={{ width: mobileFlag ? '0' : 'fit-content' }}>
       {collapse.current ? null : (
         <div w-screen h-full pos-absolute left-0 z-5 style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}></div>
       )}
@@ -45,9 +47,9 @@ export default function SideBarContianer(props: { content: React.ComponentType }
         duration-500
         z-10
         css={containerCss}
-        style={{ width: isMobile() ? '100vh' : 'fit-content' }}
+        style={{ width: mobileFlag ? '100vh' : 'fit-content' }}
         onClick={() => setCollapse(true)}>
-        {isMobile() ? (
+        {mobileFlag ? (
           <div
             h-10
             w-10
@@ -79,7 +81,7 @@ export default function SideBarContianer(props: { content: React.ComponentType }
           onClick={() => {
             setCollapse(false)
           }}
-          style={{ position: isMobile() ? 'absolute' : 'unset' }}>
+          style={{ position: mobileFlag ? 'absolute' : 'unset' }}>
           <Content />
         </div>
       </div>

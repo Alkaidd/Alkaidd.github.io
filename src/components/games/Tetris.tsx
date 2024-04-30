@@ -1,9 +1,9 @@
 // 12 * 20
 
-import { genMatrix, horizontalFlip, PixelType, rotateMatrix, isMobile } from '@/utils/tools'
+import { genMatrix, horizontalFlip, PixelType, rotateMatrix } from '@/utils/tools'
 import { useEffect, useRef, useState } from 'react'
 import Tick from '@/utils/tick'
-import { useMoyuStore } from '@/hooks/store'
+import { useConfigStore, useMoyuStore } from '@/hooks/store'
 import ScoreCard from './ScoreCard'
 import JoyConMini from './JoyConMini'
 import ScreenContainer from './ScreenContainer'
@@ -375,8 +375,9 @@ export default function TetrisScreen() {
     }
   }
 
+  const mobileFlag = useConfigStore((state) => state.mobileFlag)
   useEffect(() => {
-    if (!isMobile()) {
+    if (!mobileFlag) {
       window.removeEventListener('keydown', onKeyDown)
       window.addEventListener('keydown', onKeyDown)
 
@@ -451,7 +452,7 @@ export default function TetrisScreen() {
           </div>
         )}
       />
-      {isMobile() ? (
+      {mobileFlag ? (
         <JoyConMini
           onButton1Down={() => {
             args.current.pause = true

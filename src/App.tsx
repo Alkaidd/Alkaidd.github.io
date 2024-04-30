@@ -7,13 +7,19 @@ import { useEffect } from 'react'
 import Page404 from './views/Page404'
 import GameDistribution from './views/Game'
 import Article from './views/Article'
-import { isMobile } from './utils/tools'
 import { changeCssVar } from './utils/theme'
+import Introduce from './views/Introduce'
+import { useConfigStore } from './hooks/store'
+import { isMobile } from './utils/tools'
 
 function App() {
+  const setMobileFlag = useConfigStore((state) => state.setMobileFlag)
+
   useEffect(() => {
     const handleIsMobile = () => {
-      changeCssVar(isMobile())
+      const flag = isMobile()
+      setMobileFlag(flag)
+      changeCssVar(flag)
     }
 
     const resizeObserver = new ResizeObserver(() => {
@@ -44,6 +50,7 @@ function App() {
         <Route path='/home/*' element={<Home />} />
         <Route path='/moyu/*' element={<GameDistribution />} />
         <Route path='/article/*' element={<Article />} />
+        <Route path='/introduce/*' element={<Introduce />} />
         <Route path='*' element={<Page404 />} />
       </Routes>
     </div>
