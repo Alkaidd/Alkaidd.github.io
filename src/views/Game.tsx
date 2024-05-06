@@ -1,5 +1,6 @@
 import NavTitle from '@/components/NavTitle'
 import SnakeGame from '@/components/games/Snake'
+import StarDream from '@/components/games/StarDream'
 import TetrisScreen from '@/components/games/Tetris'
 import { Routes, Route } from 'react-router-dom'
 
@@ -10,6 +11,7 @@ export default function GameDistribution() {
       <Routes>
         <Route path='tetris' element={<TetrisScreen />} />
         <Route path='snake' element={<SnakeGame />} />
+        <Route path='star-dream' element={<StarDream />} />
       </Routes>
     </div>
   )
