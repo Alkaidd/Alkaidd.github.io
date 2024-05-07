@@ -77,6 +77,14 @@ export default function StarDream() {
     ArrowUp: false,
     ArrowDown: false,
   })
+  function arrowUp() {
+    keyStatus.current.ArrowUp = true
+    myBunny.move(1)
+  }
+  function arrowDown() {
+    keyStatus.current.ArrowUp = true
+    myBunny.move(-1)
+  }
   function onKeyDown(event: KeyboardEvent) {
     if (event.key === ' ') {
       console.log('bunny jump')
@@ -85,11 +93,9 @@ export default function StarDream() {
     }
 
     if (event.key === 'ArrowRight') {
-      keyStatus.current.ArrowUp = true
-      myBunny.move(1)
+      arrowUp()
     } else if (event.key === 'ArrowLeft') {
-      keyStatus.current.ArrowDown = true
-      myBunny.move(-1)
+      arrowDown()
     }
   }
 

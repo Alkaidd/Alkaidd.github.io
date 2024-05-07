@@ -17,7 +17,7 @@ export default class Bunny {
     this.moveDirection = 0
     this.moveFlag = false
 
-    this.body = Bodies.rectangle(400, 200, 80, 80, {
+    this.body = Bodies.rectangle(200, 200, 80, 80, {
       mass: 60,
       restitution: 0.1,
     })
