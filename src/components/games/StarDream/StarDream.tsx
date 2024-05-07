@@ -74,39 +74,38 @@ export default function StarDream() {
   }, [app])
 
   const keyStatus = useRef({
-    ArrowUp: false,
-    ArrowDown: false,
+    ArrowLeft: false,
+    ArrowRight: false,
   })
-  function arrowUp() {
-    keyStatus.current.ArrowUp = true
-    myBunny.move(1)
+  const arrowUp = () => {
+    myBunny.jump()
   }
-  function arrowDown() {
-    keyStatus.current.ArrowUp = true
+  const arrowLeft = () => {
+    keyStatus.current.ArrowLeft = true
     myBunny.move(-1)
   }
+  const arrowRight = () => {
+    keyStatus.current.ArrowRight = true
+    myBunny.move(1)
+  }
   function onKeyDown(event: KeyboardEvent) {
-    if (event.key === ' ') {
-      console.log('bunny jump')
-      myBunny.jump()
-      console.log(myBunny.body.position)
-    }
-
-    if (event.key === 'ArrowRight') {
+    if (event.key === 'ArrowUp') {
       arrowUp()
     } else if (event.key === 'ArrowLeft') {
-      arrowDown()
+      arrowLeft()
+    } else if (event.key === 'ArrowRight') {
+      arrowRight()
     }
   }
 
   function onKeyUp(event: KeyboardEvent) {
-    if (event.key === 'ArrowRight') {
-      keyStatus.current.ArrowUp = false
-    } else if (event.key === 'ArrowLeft') {
-      keyStatus.current.ArrowDown = false
+    if (event.key === 'ArrowLeft') {
+      keyStatus.current.ArrowLeft = false
+    } else if (event.key === 'ArrowRight') {
+      keyStatus.current.ArrowRight = false
     }
 
-    if (!keyStatus.current.ArrowUp && !keyStatus.current.ArrowDown) {
+    if (!keyStatus.current.ArrowLeft && !keyStatus.current.ArrowRight) {
       myBunny.stop()
     }
   }
@@ -139,7 +138,7 @@ export default function StarDream() {
         <JoyConMini
           onButton1Down={() => void 0}
           onButton2Down={() => void 0}
-          onArrowUP={() => void 0}
+          onArrowUP={() => arrowUp()}
           onArrowDown={() => void 0}
           onArrowLeft={() => void 0}
           onArrowRight={() => void 0}
