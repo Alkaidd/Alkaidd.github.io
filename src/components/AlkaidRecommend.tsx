@@ -35,6 +35,12 @@ const recommendItems: RecommendItem[] = [
     abstract: '经典游戏，贪吃蛇。',
     path: '/moyu/snake',
   },
+  {
+    name: '测试游戏demo',
+    img: '/static/star-dream.png',
+    abstract: '使用canvas + pixi.js + matter.js开发，开发中...',
+    path: '/moyu/star-dream',
+  },
 ]
 
 fileInfoList.forEach((fileInfo) => {
