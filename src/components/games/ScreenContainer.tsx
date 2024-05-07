@@ -6,12 +6,34 @@ export default function ScreenContainer({ content: Content }: { content: React.C
   const scaleRatio = useRef(1)
 
   useEffect(() => {
-    if (contentRef.current && scaleContent.current) {
-      const widthRatio = scaleContent.current.offsetWidth / contentRef.current.offsetWidth
-      const heightRatio = scaleContent.current.offsetHeight / contentRef.current.offsetHeight
-      scaleRatio.current = 1 / Math.max(heightRatio, widthRatio)
+    const handleResize = () => {
+      if (contentRef.current && scaleContent.current) {
+        const widthRatio = scaleContent.current.offsetWidth / contentRef.current.offsetWidth
+        const heightRatio = scaleContent.current.offsetHeight / contentRef.current.offsetHeight
+        scaleRatio.current = 1 / Math.max(heightRatio, widthRatio)
+      }
     }
-  }, [contentRef, scaleContent])
+    const resizeObserver = new ResizeObserver(([]) => {
+      console.log('resize')
+      handleResize()
+    })
+
+    let container: HTMLDivElement | null = null
+    let content: HTMLDivElement | null = null
+    if (contentRef.current && scaleContent.current) {
+      resizeObserver.observe(contentRef.current)
+      resizeObserver.observe(scaleContent.current)
+      container = contentRef.current
+      content = scaleContent.current
+    }
+
+    return () => {
+      if (container && content) {
+        resizeObserver.unobserve(container)
+        resizeObserver.unobserve(content)
+      }
+    }
+  }, [])
 
   return (
     <div w-full flex flex-1 h-full justify-center min-h-0 overflow-hidden ref={contentRef}>

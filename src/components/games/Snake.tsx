@@ -329,7 +329,7 @@ export default function SnakeGame() {
     }
   }, [])
   return (
-    <div h-full>
+    <div h-full p-2 box-border>
       <div className='snake-screen' h-full w-full flex flex-col items-center w-fit min-h-0>
         <ScoreCard score={args.current.score} />
         <ScreenContainer
