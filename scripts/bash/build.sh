@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# 获取当前分支名称
+current_branch=$(git symbolic-ref --short -q HEAD)
+echo "当前分支是: $current_branch"
+
 echo "安装依赖"
 pnpm i
 
@@ -27,5 +31,5 @@ git commit -m "$*"
 echo "推送至远程仓库"
 git push
 
-echo "切换回main分支"
-git switch main
+echo "切换回 $current_branch 分支"
+git switch "$current_branch"
