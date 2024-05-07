@@ -98,4 +98,20 @@ export function getRandomNumber(number: number) {
   return Math.floor(Math.random() * number)
 }
 
+export function isJumpOnTop(pairs: Matter.Pair[], targetName: string): boolean {
+  return pairs.some((item) => {
+    if (item.bodyA.label !== targetName && item.bodyB.label !== targetName) {
+      return false
+    }
+
+    const target = item.bodyA.label === targetName ? item.bodyA.bounds : item.bodyB.bounds
+    const jinx = item.bodyA.label === targetName ? item.bodyB.bounds : item.bodyA.bounds
+
+    // matter y轴正方向向下
+    if (jinx.min.y - target.max.y < 0.1 && target.max.x > jinx.min.x && target.min.x < jinx.max.x) {
+      return true
+    }
+  })
+}
+
 export type PixelType = { value: number; type: 'riverbed' | 'fish' }

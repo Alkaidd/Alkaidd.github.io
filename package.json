@@ -15,6 +15,7 @@
     "@mui/lab": "5.0.0-alpha.170",
     "@mui/material": "^5.15.15",
     "@types/node": "^20.11.29",
+    "matter-js": "^0.19.0",
     "pixi.js": "^8.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -22,6 +23,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/matter-js": "^0.19.6",
     "@types/mdast": "^4.0.3",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
