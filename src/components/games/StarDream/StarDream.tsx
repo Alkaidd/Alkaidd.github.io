@@ -7,17 +7,25 @@ import { Engine, Runner } from 'matter-js'
 import { engine, genGround } from './matter'
 
 const myBunny: Bunny = new Bunny()
+let app: Application | null = null
+let initFlag = false
 
-async function initApp(app: Application<Renderer>, container: HTMLDivElement) {
-  console.log('try load pixi')
-  if (!container || !app) {
-    console.error('no target container or generate pixi app failed')
+async function initApp(container: HTMLDivElement) {
+  if (!container) {
+    console.error('no target container')
     return
   }
 
-  await app.init({ background: '#1099bb', resizeTo: container })
-  if (!container.querySelector('canvas')) {
-    console.log('append canvas')
+  if (app) {
+    console.info('app already created')
+  } else {
+    app = new Application()
+    initFlag = true
+    await app.init({ background: '#1099bb', resizeTo: container })
+    initFlag = false
+  }
+
+  if (!container.querySelector('canvas') && !initFlag) {
     container.appendChild(app.canvas)
   } else {
     return
@@ -56,22 +64,23 @@ async function initApp(app: Application<Renderer>, container: HTMLDivElement) {
 
     Engine.update(engine)
   })
-  console.log(engine.gravity)
+
+  return app
 }
 
 export default function StarDream() {
   const pixiContainer = useRef<HTMLDivElement | null>(null)
-  const app = useRef<Application<Renderer>>()
+  // const app = useRef<Application<Renderer>>()
   // matter
 
   useEffect(() => {
-    app.current = new Application()
-
-    pixiContainer.current && initApp(app.current, pixiContainer.current)
+    if (pixiContainer.current) {
+      initApp(pixiContainer.current)
+    }
     return () => {
       // app.destroy()
     }
-  }, [app])
+  }, [])
 
   const keyStatus = useRef({
     ArrowLeft: false,

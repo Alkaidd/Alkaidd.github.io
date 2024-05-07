@@ -62,8 +62,8 @@ function getItemDefaultHeight(item: RecommendItem, width: number, fontSize: numb
   const lineCount = width / (fontSize + 1)
   const lines = item.abstract.length / lineCount
 
-  if (lines > 3) {
-    abstractHeight = lines * (fontSize + 5)
+  if (lines > 5) {
+    abstractHeight = lines * fontSize
   }
 
   return {
@@ -80,7 +80,7 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(0.5),
   textAlign: 'center',
   color: theme.palette.text.secondary,
-  transition: 'all 1s ease',
+  transition: 'transform 1s ease',
   cursor: 'pointer',
   '&:hover': {
     zIndex: 999,
@@ -88,7 +88,7 @@ const Item = styled(Paper)(({ theme }) => ({
   },
 }))
 
-function BasicMasonry(props: { width: number }) {
+function BasicMasonry(props: { width: number; height: number }) {
   const navigate = useNavigate()
 
   const mobileFlag = useConfigStore((state) => state.mobileFlag)
@@ -130,10 +130,9 @@ function BasicMasonry(props: { width: number }) {
     </Box>
   )
 }
-
 export function AlkaidRecommend() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState(1100)
+  const [width, setWidth] = useState(0)
   useEffect(() => {
     const handleResize = (newWidth: number) => {
       if (containerRef.current) {
@@ -141,6 +140,7 @@ export function AlkaidRecommend() {
       }
     }
     const resizeObserver = new ResizeObserver(([entry]) => {
+      console.log('resize')
       handleResize(entry.contentRect.width)
     })
 
@@ -158,7 +158,9 @@ export function AlkaidRecommend() {
   }, [])
   return (
     <div ref={containerRef} w-full pt-20 box-border h-full overflow-y-auto>
-      <BasicMasonry width={width} />
+      {width === 0 || containerRef.current == null ? null : (
+        <BasicMasonry width={width} height={containerRef.current.offsetHeight} />
+      )}
     </div>
   )
 }
