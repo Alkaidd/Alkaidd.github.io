@@ -12,7 +12,7 @@ echo "构建项目"
 pnpm run build
 
 echo "切换分支到master"
-git switch master
+git switch master -f
 
 echo "删除旧的文件"
 rm -r assets
