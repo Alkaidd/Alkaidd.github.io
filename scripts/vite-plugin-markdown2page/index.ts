@@ -7,11 +7,13 @@ import remarkParse from 'remark-parse'
 // import rehypeReact from 'rehype-react'
 import { unified } from 'unified'
 // import { toHast } from 'mdast-util-to-hast'
+import rehypeHighlight from 'rehype-highlight'
+import remarkGfm from 'remark-gfm'
 import rehypeStringify from 'rehype-stringify'
 import remarkRehype from 'remark-rehype'
 import rehypeRaw from 'rehype-raw'
 import { type VFile } from 'vfile'
-import { type Root } from 'mdast'
+import { RootContent, type Root } from 'mdast'
 
 const fileRegex = /\.(md)$/
 
@@ -58,7 +60,9 @@ export default function vitePluginMarkdown2Page(config?: Config): Plugin {
 // const production = { Fragment: prod.Fragment, jsx: prod.jsx, jsxs: prod.jsxs }
 const processor = unified()
   .use(remarkParse)
+  .use(remarkGfm)
   .use(remarkRehype, {})
+  .use(rehypeHighlight)
   .use(rehypeRaw)
   .use(myRehypeFormat as typeof remarkRehype)
   .use(rehypeStringify, { closeEmptyElements: true, closeSelfClosing: true })
@@ -75,15 +79,72 @@ function myRehypeFormat() {
         children: oldRoot,
       },
     ] as unknown as typeof oldRoot
+
+    dfsFormatNode(newRoot)
     tree.children = newRoot
 
     return tree
   }
 }
 
+type MyRootContent = RootContent & { tagName: string; children: MyRootContent[] }
+function dfsFormatNode(nodes: RootContent[]) {
+  ;(nodes as MyRootContent[]).forEach((node) => {
+    if (node.tagName === 'code') {
+      console.log(node)
+      formatCodeTag(node)
+    } else if (node.tagName === 'pre') {
+      formatPreTag(node)
+    }
+    if (Array.isArray(node.children) && node.children.length > 0) {
+      dfsFormatNode(node.children)
+    }
+  })
+}
+
+function formatCodeTag(node: MyRootContent) {
+  node.children.forEach((content) => {
+    if (content.type === 'text') {
+      content.value = '{`' + content.value + '`}'
+    } else if (Array.isArray(content.children) && content.children.length > 0) {
+      formatCodeTag(content)
+    }
+  })
+}
+
+function formatPreTag(node: MyRootContent) {
+  if (node.children && node.children.some((item) => item.tagName === 'code')) {
+    node.children.push({
+      type: 'element',
+      tagName: 'div',
+      properties: {
+        className: 'code-buttons',
+      },
+      children: [
+        {
+          type: 'element',
+          tagName: 'button',
+          properties: {
+            className: 'copy-button',
+            title: 'copy',
+          },
+          children: [
+            {
+              type: 'text',
+              tagName: '',
+              value: 'copy',
+              children: [],
+            },
+          ],
+        },
+      ],
+    })
+  }
+}
+
 async function markdown2jsx(markdown: string, functionName: string): Promise<string> {
   const file = await processor.process(markdown)
-  const res = String(file.value)
+  const res = changeHtmlProperty2Jsx(String(file.value))
 
   const jsx = 'export default function ' + functionName + ' () {\n' + 'return ' + res + '}'
   return jsx
@@ -237,6 +298,11 @@ function findPAbstract(htmlContent: string) {
     return match[1]
   }
   return ''
+}
+
+function changeHtmlProperty2Jsx(htmlContent: string) {
+  const regex = /<[^>]*\bclass\b[^>]*>/gi
+  return htmlContent.replace(regex, 'className')
 }
 
 function formatShallowObj(target: Record<string, string>): string {

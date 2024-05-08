@@ -28,6 +28,21 @@ export default function Article() {
   function toArticle(name: string) {
     navigate(`${name}`)
   }
+
+  async function clickArticleItem(event: { target: HTMLButtonElement }) {
+    if (event == null) {
+      return
+    }
+    if (event.target && event.target.className === 'copy-button') {
+      if (event.target.parentNode && event.target.parentNode.parentNode) {
+        const pre = event.target.parentNode.parentNode as HTMLPreElement
+        const code = pre.querySelector('code')
+        if (code) {
+          await navigator.clipboard.writeText(code.innerText)
+        }
+      }
+    }
+  }
   return (
     <div h-full w-full>
       <NavTitle title='这里是Alkaid的文章记录。' />
@@ -52,7 +67,7 @@ export default function Article() {
             )
           }}
         />
-        <div h-full flex-1 overflow-auto mt--20 pt-20 className='article'>
+        <div h-full flex-1 overflow-auto mt--20 pt-20 box-border className='article'>
           <Routes>
             {ArticleComponentNames.map((ArticleComName, index) => {
               console.log('path', ArticleComName)
@@ -62,7 +77,7 @@ export default function Article() {
                   path={ArticleComName}
                   key={index}
                   element={
-                    <div p-2>
+                    <div onClick={(e) => clickArticleItem(e as unknown as { target: HTMLButtonElement })} p-2>
                       <ArticleCom key={index} />
                     </div>
                   }

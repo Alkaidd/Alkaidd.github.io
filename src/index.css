@@ -16,3 +16,33 @@ body {
   height: auto;
   object-fit: cover;
 }
+
+.article code {
+  background-color: #e9e9e9;
+  border-radius: 5px;
+}
+
+.article pre {
+  position: relative;
+}
+
+.article pre:hover .code-buttons {
+  opacity: 0.5;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.article pre .code-buttons {
+  width: fit-content;
+  position: absolute;
+  top: 2px;
+  right: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease-in-out;
+}
+
+.article pre .code-buttons button {
+  border-color: #121212;
+  border-radius: 4px;
+}
