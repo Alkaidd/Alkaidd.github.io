@@ -12,6 +12,7 @@ export default function SideBarContianer(props: { content: React.ComponentType }
 
   function setCollapse(flag: boolean) {
     if (!mobileFlag) {
+      setCss(css({}))
       return
     }
     if (!flag) {
@@ -33,10 +34,8 @@ export default function SideBarContianer(props: { content: React.ComponentType }
     collapse.current = flag
   }
   useEffect(() => {
-    if (mobileFlag) {
-      setCollapse(true)
-    }
-  }, [])
+    setCollapse(true)
+  }, [mobileFlag])
   return (
     <div h-full pos-relative style={{ width: mobileFlag ? '0' : 'fit-content' }}>
       {collapse.current ? null : (
