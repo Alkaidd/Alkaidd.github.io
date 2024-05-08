@@ -14,6 +14,7 @@ import remarkRehype from 'remark-rehype'
 import rehypeRaw from 'rehype-raw'
 import { type VFile } from 'vfile'
 import { RootContent, type Root } from 'mdast'
+import { exec } from 'child_process'
 
 const fileRegex = /\.(md)$/
 
@@ -160,7 +161,9 @@ async function buildMarkdown2Jsx(targetPath: string) {
         const filePath = path.join(targetPath, file)
         const data = await fs.promises.readFile(filePath, 'utf8')
         const jsx = await markdown2jsx(data, file.split('.')[0])
-        // console.log(jsx)
+        const stats = await fs.promises.stat(filePath)
+
+        const birthTime = await getGitFirstCommitTime(filePath)
 
         const newName = file.replace(fileRegex, '.tsx')
         await writeFileForce(tempPath, path.join(tempPath, newName), jsx)
@@ -169,6 +172,8 @@ async function buildMarkdown2Jsx(targetPath: string) {
           fullname: newName,
           title: findH1Title(jsx),
           abstract: findPAbstract(jsx),
+          birthTime,
+          fileSize: stats.size,
         })
       }
     }
@@ -177,6 +182,18 @@ async function buildMarkdown2Jsx(targetPath: string) {
   } catch (e) {
     console.log(e)
   }
+}
+
+async function getGitFirstCommitTime(filePath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    exec(`git log --pretty=format:"%ad" --date=short --follow -- ${filePath} | head -n 1`, (error, stdout, stderr) => {
+      if (error) {
+        reject(error)
+        return
+      }
+      resolve(stdout.trim())
+    })
+  })
 }
 
 async function writeFileForce(directory: string, fullPath: string, content: string) {
@@ -248,6 +265,8 @@ type IndexTsFileInfo = {
   fullname: string
   title: string
   abstract: string
+  birthTime: string
+  fileSize: number
 }
 function getIndexTs(files: IndexTsFileInfo[]) {
   let content = ''
@@ -267,6 +286,8 @@ function getIndexTs(files: IndexTsFileInfo[]) {
         name: filenames[index],
         title: file.title,
         abstract: file.abstract,
+        birthTime: file.birthTime,
+        fileSize: file.fileSize,
       })
     })
     .join(',\n')
@@ -290,7 +311,7 @@ function findH1Title(htmlContent: string) {
 }
 
 function findPAbstract(htmlContent: string) {
-  // 使用正则表达式匹配第一个 <h1> 标签的内容
+  // 使用正则表达式匹配第一个 <p> 标签的内容
   const regex = /<p>(.*?)<\/p>/
   const match = regex.exec(htmlContent)
   if (match) {
@@ -305,10 +326,16 @@ function changeHtmlProperty2Jsx(htmlContent: string) {
   })
 }
 
-function formatShallowObj(target: Record<string, string>): string {
+function formatShallowObj(target: Record<string, string | number>): string {
   let outputString = '{\n'
   Object.keys(target).forEach((key, index, arr) => {
-    outputString += `  ${key}: '${target[key]}'`
+    let keyVal: string | number = ''
+    if (typeof target[key] === 'string') {
+      keyVal = `'${target[key]}'`
+    } else if (typeof target[key] === 'number') {
+      keyVal = target[key]
+    }
+    outputString += `  ${key}: ${keyVal}`
     if (index !== arr.length - 1) {
       outputString += ',\n'
     } else {

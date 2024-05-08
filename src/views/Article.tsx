@@ -6,6 +6,10 @@ import { css } from '@emotion/react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 
 const ArticleComponentNames = Object.keys(articles)
+const fileMap: Record<string, (typeof fileInfoList)[0]> = {}
+fileInfoList.forEach((item) => {
+  fileMap[item.name] = item
+})
 
 const sideWidth = css`
   width: var(--side-item-width);
@@ -70,7 +74,7 @@ export default function Article() {
         <div h-full flex-1 overflow-auto mt--20 pt-20 box-border className='article'>
           <Routes>
             {ArticleComponentNames.map((ArticleComName, index) => {
-              console.log('path', ArticleComName)
+              // console.log('path', ArticleComName)
               const ArticleCom = Reflect.get(articles, ArticleComName)
               return (
                 <Route
@@ -78,6 +82,13 @@ export default function Article() {
                   key={index}
                   element={
                     <div onClick={(e) => clickArticleItem(e as unknown as { target: HTMLButtonElement })} p-2>
+                      <div color-coolgray text-sm>
+                        <span pr-12>
+                          CreateTime:{' '}
+                          <time dateTime={fileMap[ArticleComName].birthTime}>{fileMap[ArticleComName].birthTime} </time>
+                        </span>
+                        <span>Size: {fileMap[ArticleComName].fileSize}</span>
+                      </div>
                       <ArticleCom key={index} />
                     </div>
                   }
