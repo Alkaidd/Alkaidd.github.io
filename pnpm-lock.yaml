@@ -4,101 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-<<<<<<< Updated upstream
-dependencies:
-  '@emotion/react':
-    specifier: ^11.11.4
-    version: 11.11.4(@types/react@18.2.66)(react@18.2.0)
-  '@emotion/styled':
-    specifier: ^11.11.5
-    version: 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.66)(react@18.2.0)
-  '@mui/lab':
-    specifier: 5.0.0-alpha.170
-    version: 5.0.0-alpha.170(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@mui/material@5.15.15)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
-  '@mui/material':
-    specifier: ^5.15.15
-    version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
-  '@types/node':
-    specifier: ^20.11.29
-    version: 20.11.29
-  react:
-    specifier: ^18.2.0
-    version: 18.2.0
-  react-dom:
-    specifier: ^18.2.0
-    version: 18.2.0(react@18.2.0)
-  react-router-dom:
-    specifier: ^6.22.3
-    version: 6.22.3(react-dom@18.2.0)(react@18.2.0)
-  zustand:
-    specifier: ^4.5.2
-    version: 4.5.2(@types/react@18.2.66)(react@18.2.0)
-
-devDependencies:
-  '@types/mdast':
-    specifier: ^4.0.3
-    version: 4.0.3
-  '@types/react':
-    specifier: ^18.2.64
-    version: 18.2.66
-  '@types/react-dom':
-    specifier: ^18.2.21
-    version: 18.2.22
-  '@typescript-eslint/eslint-plugin':
-    specifier: ^7.1.1
-    version: 7.2.0(@typescript-eslint/parser@7.2.0)(eslint@8.57.0)(typescript@5.4.2)
-  '@typescript-eslint/parser':
-    specifier: ^7.1.1
-    version: 7.2.0(eslint@8.57.0)(typescript@5.4.2)
-  '@vitejs/plugin-react':
-    specifier: ^4.2.1
-    version: 4.2.1(vite@5.1.6)
-  eslint:
-    specifier: ^8.57.0
-    version: 8.57.0
-  eslint-config-prettier:
-    specifier: ^9.1.0
-    version: 9.1.0(eslint@8.57.0)
-  eslint-plugin-prettier:
-    specifier: ^5.1.3
-    version: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.2.5)
-  eslint-plugin-react-hooks:
-    specifier: ^4.6.0
-    version: 4.6.0(eslint@8.57.0)
-  eslint-plugin-react-refresh:
-    specifier: ^0.4.5
-    version: 0.4.6(eslint@8.57.0)
-  rehype-raw:
-    specifier: ^7.0.0
-    version: 7.0.0
-  rehype-stringify:
-    specifier: ^10.0.0
-    version: 10.0.0
-  remark-parse:
-    specifier: ^11.0.0
-    version: 11.0.0
-  remark-rehype:
-    specifier: ^11.1.0
-    version: 11.1.0
-  transformer-attributify-jsx-sg:
-    specifier: ^0.0.7
-    version: 0.0.7
-  typescript:
-    specifier: ^5.2.2
-    version: 5.4.2
-  unified:
-    specifier: ^11.0.4
-    version: 11.0.4
-  unocss:
-    specifier: ^0.58.6
-    version: 0.58.6(postcss@8.4.36)(vite@5.1.6)
-  vfile:
-    specifier: ^6.0.1
-    version: 6.0.1
-  vite:
-    specifier: ^5.1.6
-    version: 5.1.6(@types/node@20.11.29)
-=======
 importers:
 
   .:
@@ -133,12 +38,6 @@ importers:
       react-router-dom:
         specifier: ^6.22.3
         version: 6.22.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      rehype-highlight:
-        specifier: ^7.0.0
-        version: 7.0.0
-      remark-gfm:
-        specifier: ^4.0.0
-        version: 4.0.0
       zustand:
         specifier: ^4.5.2
         version: 4.5.2(@types/react@18.2.66)(react@18.2.0)
@@ -179,12 +78,18 @@ importers:
       eslint-plugin-react-refresh:
         specifier: ^0.4.5
         version: 0.4.6(eslint@8.57.0)
+      rehype-highlight:
+        specifier: ^7.0.0
+        version: 7.0.0
       rehype-raw:
         specifier: ^7.0.0
         version: 7.0.0
       rehype-stringify:
         specifier: ^10.0.0
         version: 10.0.0
+      remark-gfm:
+        specifier: ^4.0.0
+        version: 4.0.0
       remark-parse:
         specifier: ^11.0.0
         version: 11.0.0
@@ -209,7 +114,6 @@ importers:
       vite:
         specifier: ^5.1.6
         version: 5.1.6(@types/node@20.11.29)
->>>>>>> Stashed changes
 
 packages:
 
@@ -2968,16 +2872,9 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-<<<<<<< Updated upstream
-  /@pkgr/core@0.1.1:
-    resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
-    engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
-    dev: true
-=======
   '@pixi/colord@2.9.6': {}
 
   '@pkgr/core@0.1.1': {}
->>>>>>> Stashed changes
 
   '@polka/url@1.0.0-next.25': {}
 
@@ -3053,26 +2950,15 @@ snapshots:
     dependencies:
       '@babel/types': 7.24.0
 
-<<<<<<< Updated upstream
-  /@types/debug@4.1.12:
-    resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
-=======
   '@types/css-font-loading-module@0.0.12': {}
 
   '@types/debug@4.1.12':
->>>>>>> Stashed changes
     dependencies:
       '@types/ms': 0.7.34
 
-<<<<<<< Updated upstream
-  /@types/estree@1.0.5:
-    resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
-    dev: true
-=======
   '@types/earcut@2.1.4': {}
 
   '@types/estree@1.0.5': {}
->>>>>>> Stashed changes
 
   '@types/hast@3.0.4':
     dependencies:
@@ -3080,14 +2966,9 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-<<<<<<< Updated upstream
-  /@types/mdast@4.0.3:
-    resolution: {integrity: sha512-LsjtqsyF+d2/yFOYaN22dHZI1Cpwkrj+g06G8+qtUKlhovPW89YhqSnfKtMbkgmEtYpH2gydRNULd6y8mciAFg==}
-=======
   '@types/matter-js@0.19.6': {}
 
   '@types/mdast@4.0.3':
->>>>>>> Stashed changes
     dependencies:
       '@types/unist': 3.0.2
 
@@ -3373,18 +3254,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-<<<<<<< Updated upstream
-  /acorn-jsx@5.3.2(acorn@8.11.3):
-    resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
-    peerDependencies:
-      acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
-=======
   '@webgpu/types@0.1.40': {}
 
   '@xmldom/xmldom@0.8.10': {}
 
   acorn-jsx@5.3.2(acorn@8.11.3):
->>>>>>> Stashed changes
     dependencies:
       acorn: 8.11.3
 
@@ -3567,15 +3441,9 @@ snapshots:
 
   duplexer@0.1.2: {}
 
-<<<<<<< Updated upstream
-  /electron-to-chromium@1.4.708:
-    resolution: {integrity: sha512-iWgEEvREL4GTXXHKohhh33+6Y8XkPI5eHihDmm8zUk5Zo7HICEW+wI/j5kJ2tbuNUCXJ/sNXa03ajW635DiJXA==}
-    dev: true
-=======
   earcut@2.2.4: {}
 
   electron-to-chromium@1.4.708: {}
->>>>>>> Stashed changes
 
   entities@4.5.0: {}
 
@@ -3708,15 +3576,9 @@ snapshots:
 
   esutils@2.0.3: {}
 
-<<<<<<< Updated upstream
-  /execa@5.1.1:
-    resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
-    engines: {node: '>=10'}
-=======
   eventemitter3@5.0.1: {}
 
   execa@5.1.1:
->>>>>>> Stashed changes
     dependencies:
       cross-spawn: 7.0.3
       get-stream: 6.0.1
@@ -3961,16 +3823,9 @@ snapshots:
 
   isexe@2.0.0: {}
 
-<<<<<<< Updated upstream
-  /jiti@1.21.0:
-    resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
-    hasBin: true
-    dev: true
-=======
   ismobilejs@1.1.1: {}
 
   jiti@1.21.0: {}
->>>>>>> Stashed changes
 
   js-tokens@4.0.0: {}
 
@@ -4040,10 +3895,6 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
 
-<<<<<<< Updated upstream
-  /mdast-util-from-markdown@2.0.0:
-    resolution: {integrity: sha512-n7MTOr/z+8NAX/wmhhDji8O3bRvPTV/U0oTCaZJkjhPSKTPhS3xufVhKGF8s1pJ7Ox4QgoIU7KHseh09S+9rTA==}
-=======
   markdown-table@3.0.3: {}
 
   matter-js@0.19.0: {}
@@ -4056,7 +3907,6 @@ snapshots:
       unist-util-visit-parents: 6.0.1
 
   mdast-util-from-markdown@2.0.0:
->>>>>>> Stashed changes
     dependencies:
       '@types/mdast': 4.0.3
       '@types/unist': 3.0.2
@@ -4443,14 +4293,9 @@ snapshots:
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
 
-<<<<<<< Updated upstream
-  /parse5@7.1.2:
-    resolution: {integrity: sha512-Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==}
-=======
   parse-svg-path@0.1.2: {}
 
   parse5@7.1.2:
->>>>>>> Stashed changes
     dependencies:
       entities: 4.5.0
 
@@ -4472,10 +4317,6 @@ snapshots:
 
   picomatch@2.3.1: {}
 
-<<<<<<< Updated upstream
-  /pkg-types@1.0.3:
-    resolution: {integrity: sha512-nN7pYi0AQqJnoLPC9eHFQ8AcyaixBUOwvqc5TDnIKCMEE6I0y8P7OKA7fPexsXGCGxQDl/cmrLAp26LhcwxZ4A==}
-=======
   pixi.js@8.1.1:
     dependencies:
       '@pixi/colord': 2.9.6
@@ -4489,7 +4330,6 @@ snapshots:
       parse-svg-path: 0.1.2
 
   pkg-types@1.0.3:
->>>>>>> Stashed changes
     dependencies:
       jsonc-parser: 3.2.1
       mlly: 1.6.1
