@@ -87,11 +87,10 @@ function myRehypeFormat() {
   }
 }
 
-type MyRootContent = RootContent & { tagName: string; children: MyRootContent[] }
+type MyRootContent = RootContent & { tagName: string; children: any[] }
 function dfsFormatNode(nodes: RootContent[]) {
   ;(nodes as MyRootContent[]).forEach((node) => {
     if (node.tagName === 'code') {
-      console.log(node)
       formatCodeTag(node)
     } else if (node.tagName === 'pre') {
       formatPreTag(node)
@@ -301,8 +300,9 @@ function findPAbstract(htmlContent: string) {
 }
 
 function changeHtmlProperty2Jsx(htmlContent: string) {
-  const regex = /<[^>]*\bclass\b[^>]*>/gi
-  return htmlContent.replace(regex, 'className')
+  return htmlContent.replace(/(<[^>]*\s)class=(["'])([^"'>]*)\2/gi, function (match, p1, p2, p3) {
+    return p1 + 'className=' + p2 + p3 + p2
+  })
 }
 
 function formatShallowObj(target: Record<string, string>): string {

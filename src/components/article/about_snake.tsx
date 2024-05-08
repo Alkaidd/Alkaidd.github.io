@@ -18,83 +18,83 @@ return <div><h1>如何使用react徒手搓一个贪吃蛇游戏</h1>
 <p>工欲善其事，必先利其器。计时器是可以脱离我们具体场景单独封装的工具库，所以我们先来实现一下我们的计时器。</p>
 <h3>计时器</h3>
 <p>没什么太多值得说的，一秒钟分成30帧，每一帧持续时间结束后递归调用。注意使用performance.now()以获取更精准的时间。</p>
-<pre><code class="hljs language-typescript"><span class="hljs-keyword">{`class`}</span>{` `}<span class="hljs-title class_">{`Tick`}</span>{` {
-  `}<span class="hljs-attr">{`lastTickTime`}</span>{`: `}<span class="hljs-built_in">{`number`}</span>{`
-  `}<span class="hljs-attr">{`ticks`}</span>{`: `}<span class="hljs-built_in">{`number`}</span>{`
-  `}<span class="hljs-attr">{`tickLastTime`}</span>{`: `}<span class="hljs-built_in">{`number`}</span>{`
-  `}<span class="hljs-attr">{`stopFlag`}</span>{`: `}<span class="hljs-built_in">{`boolean`}</span>{`
-  `}<span class="hljs-attr">{`tickFunc`}</span>{`: `}<span class="hljs-function">{`(`}<span class="hljs-params">{`
-    lastTickTime: `}<span class="hljs-built_in">{`number`}</span>{`,
-    nowTickTime: `}<span class="hljs-built_in">{`number`}</span>{`,
-    resolve: (value: `}<span class="hljs-built_in">{`unknown`}</span>{`) => `}<span class="hljs-built_in">{`void`}</span>{`,
-    reject: (reason?: `}<span class="hljs-built_in">{`any`}</span>{`) => `}<span class="hljs-built_in">{`void`}</span>{`,
-  `}</span>{`) =>`}</span>{` `}<span class="hljs-built_in">{`void`}</span>{`
+<pre><code className="hljs language-typescript"><span className="hljs-keyword">{`class`}</span>{` `}<span className="hljs-title class_">{`Tick`}</span>{` {
+  `}<span className="hljs-attr">{`lastTickTime`}</span>{`: `}<span className="hljs-built_in">{`number`}</span>{`
+  `}<span className="hljs-attr">{`ticks`}</span>{`: `}<span className="hljs-built_in">{`number`}</span>{`
+  `}<span className="hljs-attr">{`tickLastTime`}</span>{`: `}<span className="hljs-built_in">{`number`}</span>{`
+  `}<span className="hljs-attr">{`stopFlag`}</span>{`: `}<span className="hljs-built_in">{`boolean`}</span>{`
+  `}<span className="hljs-attr">{`tickFunc`}</span>{`: `}<span className="hljs-function">{`(`}<span className="hljs-params">{`
+    lastTickTime: `}<span className="hljs-built_in">{`number`}</span>{`,
+    nowTickTime: `}<span className="hljs-built_in">{`number`}</span>{`,
+    resolve: (value: `}<span className="hljs-built_in">{`unknown`}</span>{`) => `}<span className="hljs-built_in">{`void`}</span>{`,
+    reject: (reason?: `}<span className="hljs-built_in">{`any`}</span>{`) => `}<span className="hljs-built_in">{`void`}</span>{`,
+  `}</span>{`) =>`}</span>{` `}<span className="hljs-built_in">{`void`}</span>{`
 
-  `}<span class="hljs-title function_">{`constructor`}</span>{`(`}<span class="hljs-params">{`
+  `}<span className="hljs-title function_">{`constructor`}</span>{`(`}<span className="hljs-params">{`
     cb: (
-      lastTickTime: `}<span class="hljs-built_in">{`number`}</span>{`,
-      nowTickTime: `}<span class="hljs-built_in">{`number`}</span>{`,
-      resolve: (value: `}<span class="hljs-built_in">{`unknown`}</span>{`) => `}<span class="hljs-built_in">{`void`}</span>{`,
-      reject: (reason?: `}<span class="hljs-built_in">{`any`}</span>{`) => `}<span class="hljs-built_in">{`void`}</span>{`,
-    ) => `}<span class="hljs-built_in">{`void`}</span>{`,
+      lastTickTime: `}<span className="hljs-built_in">{`number`}</span>{`,
+      nowTickTime: `}<span className="hljs-built_in">{`number`}</span>{`,
+      resolve: (value: `}<span className="hljs-built_in">{`unknown`}</span>{`) => `}<span className="hljs-built_in">{`void`}</span>{`,
+      reject: (reason?: `}<span className="hljs-built_in">{`any`}</span>{`) => `}<span className="hljs-built_in">{`void`}</span>{`,
+    ) => `}<span className="hljs-built_in">{`void`}</span>{`,
   `}</span>{`) {
-    `}<span class="hljs-comment">{`// console.log('newed')`}</span>{`
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`lastTickTime`}</span>{` = performance.`}<span class="hljs-title function_">{`now`}</span>{`()
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`ticks`}</span>{` = `}<span class="hljs-number">{`30`}</span>{`
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`tickLastTime`}</span>{` = `}<span class="hljs-number">{`1000`}</span>{` / `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`ticks`}</span>{`
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`tickFunc`}</span>{` = cb
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`stopFlag`}</span>{` = `}<span class="hljs-literal">{`false`}</span>{`
+    `}<span className="hljs-comment">{`// console.log('newed')`}</span>{`
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`lastTickTime`}</span>{` = performance.`}<span className="hljs-title function_">{`now`}</span>{`()
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`ticks`}</span>{` = `}<span className="hljs-number">{`30`}</span>{`
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`tickLastTime`}</span>{` = `}<span className="hljs-number">{`1000`}</span>{` / `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`ticks`}</span>{`
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`tickFunc`}</span>{` = cb
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`stopFlag`}</span>{` = `}<span className="hljs-literal">{`false`}</span>{`
   }
 
-  `}<span class="hljs-title function_">{`go`}</span>{`(`}<span class="hljs-params"></span>{`) {
-    `}<span class="hljs-keyword">{`if`}</span>{` (`}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`stopFlag`}</span>{`) {
-      `}<span class="hljs-keyword">{`return`}</span>{`
+  `}<span className="hljs-title function_">{`go`}</span>{`(`}<span className="hljs-params"></span>{`) {
+    `}<span className="hljs-keyword">{`if`}</span>{` (`}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`stopFlag`}</span>{`) {
+      `}<span className="hljs-keyword">{`return`}</span>{`
     }
 
-    `}<span class="hljs-title function_">{`requestAnimationFrame`}</span>{`(`}<span class="hljs-function">{`() =>`}</span>{` {
-      `}<span class="hljs-keyword">{`const`}</span>{` nowTickTime = performance.`}<span class="hljs-title function_">{`now`}</span>{`()
-      `}<span class="hljs-keyword">{`new`}</span>{` `}<span class="hljs-title class_">{`Promise`}</span>{`&#x3C;`}<span class="hljs-built_in">{`any`}</span>{`>(`}<span class="hljs-function">{`(`}<span class="hljs-params">{`resolve, reject`}</span>{`) =>`}</span>{` {
-        `}<span class="hljs-keyword">{`if`}</span>{` (nowTickTime - `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`lastTickTime`}</span>{` >= `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`tickLastTime`}</span>{`) {
-          `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-title function_">{`tickFunc`}</span>{`(`}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`lastTickTime`}</span>{`, nowTickTime, resolve, reject)
-          `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`lastTickTime`}</span>{` = nowTickTime
-          `}<span class="hljs-title function_">{`resolve`}</span>{`(`}<span class="hljs-string">{`'ticked'`}</span>{`)
-          `}<span class="hljs-comment">{`// console.log('ticked')`}</span>{`
-        } `}<span class="hljs-keyword">{`else`}</span>{` {
-          `}<span class="hljs-title function_">{`resolve`}</span>{`(`}<span class="hljs-string">{`'no tick'`}</span>{`)
+    `}<span className="hljs-title function_">{`requestAnimationFrame`}</span>{`(`}<span className="hljs-function">{`() =>`}</span>{` {
+      `}<span className="hljs-keyword">{`const`}</span>{` nowTickTime = performance.`}<span className="hljs-title function_">{`now`}</span>{`()
+      `}<span className="hljs-keyword">{`new`}</span>{` `}<span className="hljs-title class_">{`Promise`}</span>{`&#x3C;`}<span className="hljs-built_in">{`any`}</span>{`>(`}<span className="hljs-function">{`(`}<span className="hljs-params">{`resolve, reject`}</span>{`) =>`}</span>{` {
+        `}<span className="hljs-keyword">{`if`}</span>{` (nowTickTime - `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`lastTickTime`}</span>{` >= `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`tickLastTime`}</span>{`) {
+          `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-title function_">{`tickFunc`}</span>{`(`}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`lastTickTime`}</span>{`, nowTickTime, resolve, reject)
+          `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`lastTickTime`}</span>{` = nowTickTime
+          `}<span className="hljs-title function_">{`resolve`}</span>{`(`}<span className="hljs-string">{`'ticked'`}</span>{`)
+          `}<span className="hljs-comment">{`// console.log('ticked')`}</span>{`
+        } `}<span className="hljs-keyword">{`else`}</span>{` {
+          `}<span className="hljs-title function_">{`resolve`}</span>{`(`}<span className="hljs-string">{`'no tick'`}</span>{`)
         }
-      }).`}<span class="hljs-title function_">{`then`}</span>{`(`}<span class="hljs-function">{`() =>`}</span>{` {
-        `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-title function_">{`go`}</span>{`()
+      }).`}<span className="hljs-title function_">{`then`}</span>{`(`}<span className="hljs-function">{`() =>`}</span>{` {
+        `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-title function_">{`go`}</span>{`()
       })
     })
   }
 
-  `}<span class="hljs-title function_">{`stop`}</span>{`(`}<span class="hljs-params"></span>{`) {
-    `}<span class="hljs-variable language_">{`console`}</span>{`.`}<span class="hljs-title function_">{`log`}</span>{`(`}<span class="hljs-string">{`'stop'`}</span>{`)
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`stopFlag`}</span>{` = `}<span class="hljs-literal">{`true`}</span>{`
+  `}<span className="hljs-title function_">{`stop`}</span>{`(`}<span className="hljs-params"></span>{`) {
+    `}<span className="hljs-variable language_">{`console`}</span>{`.`}<span className="hljs-title function_">{`log`}</span>{`(`}<span className="hljs-string">{`'stop'`}</span>{`)
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`stopFlag`}</span>{` = `}<span className="hljs-literal">{`true`}</span>{`
   }
 
-  `}<span class="hljs-title function_">{`start`}</span>{`(`}<span class="hljs-params"></span>{`) {
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`stopFlag`}</span>{` = `}<span class="hljs-literal">{`false`}</span>{`
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`lastTickTime`}</span>{` = performance.`}<span class="hljs-title function_">{`now`}</span>{`()
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-title function_">{`go`}</span>{`()
+  `}<span className="hljs-title function_">{`start`}</span>{`(`}<span className="hljs-params"></span>{`) {
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`stopFlag`}</span>{` = `}<span className="hljs-literal">{`false`}</span>{`
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`lastTickTime`}</span>{` = performance.`}<span className="hljs-title function_">{`now`}</span>{`()
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-title function_">{`go`}</span>{`()
   }
 }
 
-`}<span class="hljs-keyword">{`export`}</span>{` `}<span class="hljs-keyword">{`default`}</span>{` `}<span class="hljs-title class_">{`Tick`}</span>{`
-`}</code><div class="code-buttons"><button class="copy-button" title="copy">copy</button></div></pre>
+`}<span className="hljs-keyword">{`export`}</span>{` `}<span className="hljs-keyword">{`default`}</span>{` `}<span className="hljs-title class_">{`Tick`}</span>{`
+`}</code><div className="code-buttons"><button className="copy-button" title="copy">copy</button></div></pre>
 <h3>绘制层</h3>
 <p>绘制层也比较简单，我们用一个嵌套列表将矩阵渲染成dom元素即可，这里使用react + unocss。</p>
-<pre><code class="hljs language-typescript">{``}</code><div class="code-buttons"><button class="copy-button" title="copy">copy</button></div></pre>
+<pre><code className="hljs language-typescript">{``}</code><div className="code-buttons"><button className="copy-button" title="copy">copy</button></div></pre>
 <h3>逻辑层</h3>
 <p>对于蛇来说我们需要知道它的位置，也需要一个坐标系。对于绘制来说，我们需要一个“屏幕”以供绘制。因此我们新构造一个x*y大小的矩阵。</p>
-<pre><code class="hljs language-typescript"><span class="hljs-keyword">{`class`}</span>{` `}<span class="hljs-title class_">{`Snake`}</span>{` {
-  `}<span class="hljs-comment">{`// 0: space`}</span>{`
-  `}<span class="hljs-comment">{`// 1: snake`}</span>{`
-  `}<span class="hljs-comment">{`// 2: food`}</span>{`
-  `}<span class="hljs-attr">{`screen`}</span>{`: `}<span class="hljs-built_in">{`number`}</span>{`[][]
+<pre><code className="hljs language-typescript"><span className="hljs-keyword">{`class`}</span>{` `}<span className="hljs-title class_">{`Snake`}</span>{` {
+  `}<span className="hljs-comment">{`// 0: space`}</span>{`
+  `}<span className="hljs-comment">{`// 1: snake`}</span>{`
+  `}<span className="hljs-comment">{`// 2: food`}</span>{`
+  `}<span className="hljs-attr">{`screen`}</span>{`: `}<span className="hljs-built_in">{`number`}</span>{`[][]
 
-  `}<span class="hljs-title function_">{`constrcutor`}</span>{`(`}<span class="hljs-params">{`x: `}<span class="hljs-built_in">{`number`}</span>{`, y: `}<span class="hljs-built_in">{`number`}</span></span>{`) {
-    `}<span class="hljs-variable language_">{`this`}</span>{`.`}<span class="hljs-property">{`screen`}</span>{` = `}<span class="hljs-keyword">{`new`}</span>{` `}<span class="hljs-title class_">{`Array`}</span>{`(x).`}<span class="hljs-title function_">{`fill`}</span>{`(`}<span class="hljs-literal">{`null`}</span>{`).`}<span class="hljs-title function_">{`map`}</span>{`(`}<span class="hljs-function">{`() =>`}</span>{` `}<span class="hljs-keyword">{`new`}</span>{` `}<span class="hljs-title class_">{`Array`}</span>{`(y).`}<span class="hljs-title function_">{`fill`}</span>{`(`}<span class="hljs-number">{`0`}</span>{`))
+  `}<span className="hljs-title function_">{`constrcutor`}</span>{`(`}<span className="hljs-params">{`x: `}<span className="hljs-built_in">{`number`}</span>{`, y: `}<span className="hljs-built_in">{`number`}</span></span>{`) {
+    `}<span className="hljs-variable language_">{`this`}</span>{`.`}<span className="hljs-property">{`screen`}</span>{` = `}<span className="hljs-keyword">{`new`}</span>{` `}<span className="hljs-title class_">{`Array`}</span>{`(x).`}<span className="hljs-title function_">{`fill`}</span>{`(`}<span className="hljs-literal">{`null`}</span>{`).`}<span className="hljs-title function_">{`map`}</span>{`(`}<span className="hljs-function">{`() =>`}</span>{` `}<span className="hljs-keyword">{`new`}</span>{` `}<span className="hljs-title class_">{`Array`}</span>{`(y).`}<span className="hljs-title function_">{`fill`}</span>{`(`}<span className="hljs-number">{`0`}</span>{`))
   }
 }
-`}</code><div class="code-buttons"><button class="copy-button" title="copy">copy</button></div></pre></div>}
+`}</code><div className="code-buttons"><button className="copy-button" title="copy">copy</button></div></pre></div>}
