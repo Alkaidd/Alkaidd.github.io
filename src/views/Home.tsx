@@ -14,7 +14,7 @@ const menuStyle = css({
 
 const headerBarStyle = css({
   borderBottom: '1px solid var(--bottom-line-color)',
-  height: '64px',
+  height: '5rem',
   fontSize: '21px',
   fontWeight: 700,
   padding: '6px',
