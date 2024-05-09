@@ -76,7 +76,10 @@ class Snake {
     return index
   }
 
-  getSnakeBodyStatus(index: number) {
+  getSnakeBodyStatus(index: number | undefined) {
+    if (index == null) {
+      return []
+    }
     if (index < 0 || index >= this.snake.length) {
       return []
     }
@@ -90,7 +93,7 @@ class Snake {
       const cur = this.snake[index].position
       return [pre.x - cur.x, pre.y - cur.y]
     }
-
+    console.log(this.snake, index, this.snake[index - 1])
     const pre = this.snake[index - 1].position
     const cur = this.snake[index].position
     const next = this.snake[index + 1].position
@@ -216,7 +219,7 @@ export default function SnakeGame() {
   useEffect(() => {
     resetGame()
     return () => {
-      setScreen(structuredClone(snake.screen))
+      setScreen([[]])
     }
   }, [])
 
