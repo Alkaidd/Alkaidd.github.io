@@ -186,13 +186,16 @@ async function buildMarkdown2Jsx(targetPath: string) {
 
 async function getGitFirstCommitTime(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    exec(`git log --pretty=format:"%ad" --date=short --follow -- ${filePath} | head -n 1`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error)
-        return
-      }
-      resolve(stdout.trim())
-    })
+    exec(
+      `git log --reverse --pretty=format:"%ad" --date=short --follow -- ${filePath} | head -n 1`,
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(error)
+          return
+        }
+        resolve(stdout.trim())
+      },
+    )
   })
 }
 
