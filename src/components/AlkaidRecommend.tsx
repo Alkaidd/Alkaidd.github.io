@@ -52,23 +52,22 @@ fileInfoList.forEach((fileInfo) => {
   })
 })
 
-function getItemDefaultHeight(item: RecommendItem, width: number, fontSize: number): ComputedItem {
-  const baseHeight = 120
+function getItemDefaultHeight(item: RecommendItem, width: number): ComputedItem {
   let imgHeight = 0
-  let abstractHeight = 0
+  let abstractHeight = 30
   if (item.img != null) {
     imgHeight = (width / 3) * 4
   }
-  const lineCount = width / (fontSize + 1)
-  const lines = item.abstract.length / lineCount
 
-  if (lines > 5) {
-    abstractHeight = lines * fontSize
+  const abstractDiv = document.getElementById(item.name)
+  console.log(abstractDiv?.offsetHeight)
+  if (abstractDiv && abstractDiv.offsetHeight) {
+    abstractHeight = abstractDiv.offsetHeight
   }
 
   return {
     ...item,
-    height: baseHeight + imgHeight + abstractHeight,
+    height: imgHeight + abstractHeight,
     imgHeight,
     abstractHeight,
   }
@@ -102,22 +101,29 @@ function BasicMasonry(props: { width: number; height: number }) {
     }
   }
 
+  const [computedItems, setComputedItems] = useState<ComputedItem[]>(
+    recommendItems.map((item) => getItemDefaultHeight(item, props.width / columnCount - 16)),
+  )
+
+  useEffect(() => {
+    const tempItems = recommendItems.map((item) => getItemDefaultHeight(item, props.width / columnCount - 16))
+    setComputedItems(tempItems)
+  }, [props.width, mobileFlag])
+
   return (
     <Box sx={{ width: props.width, minHeight: 600 }}>
       <Masonry columns={columnCount} spacing={2}>
-        {recommendItems.map((item, index) => {
-          const newItem = getItemDefaultHeight(item, props.width / columnCount - 16, 17)
-          // console.log(index, newItem.height)
+        {computedItems.map((item, index) => {
           return (
-            <Item onClick={() => handleClickItem(newItem)} key={index} sx={{ height: newItem.height }}>
-              {newItem.img != null ? (
-                <div w-full style={{ height: `${newItem.imgHeight}px` }}>
-                  <img w-full h-full object-contain object-cc src={newItem.img} />
+            <Item onClick={() => handleClickItem(item)} key={index} sx={{ height: item.height }}>
+              {item.img != null ? (
+                <div w-full style={{ height: `${item.imgHeight}px` }}>
+                  <img w-full h-full object-contain object-cc src={item.img} />
                 </div>
               ) : null}
-              <div w-full style={{ borderTop: '1px solid var(--bottom-line-color)' }}>
+              <div id={item.name} w-full pb-2 box-border style={{ borderTop: '1px solid var(--bottom-line-color)' }}>
                 <div flex justify-center>
-                  <div text-lg whitespace-nowrap overflow-hidden className='w-3/4' text-ellipsis>
+                  <div text-lg className='w-4/5'>
                     {item.name}
                   </div>
                 </div>
