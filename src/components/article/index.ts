@@ -1,4 +1,5 @@
 import { default as about_snake } from './about_snake.tsx'
+import { default as feeling_20240520 } from './feeling_20240520.tsx'
 import { default as first_article } from './first_article.tsx'
 import { default as interview_proxy_safeGet } from './interview_proxy_safeGet.tsx'
 
@@ -9,6 +10,13 @@ export const fileInfoList = [
   abstract: '本篇文章聊聊自己在手搓贪吃蛇游戏的一些设计和思考。',
   birthTime: '2024-05-08',
   fileSize: 5221
+},
+{
+  name: 'feeling_20240520',
+  title: '花有重开日，人无再少时',
+  abstract: '按照我老家的算法我现在应该是25岁，按照实岁来算的话马上也24岁了。我对自己的印象总是停留在自己对母亲笑着说，我还未满18岁，不能去打工的那一幕。',
+  birthTime: '',
+  fileSize: 2325
 },
 {
   name: 'first_article',
@@ -26,4 +34,4 @@ export const fileInfoList = [
 }
 ]
 
-export default { about_snake, first_article, interview_proxy_safeGet }
+export default { about_snake, feeling_20240520, first_article, interview_proxy_safeGet }
