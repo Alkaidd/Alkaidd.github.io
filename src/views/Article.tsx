@@ -1,3 +1,4 @@
+import MdDirectory from '@/components/MdDirectory'
 import NavTitle from '@/components/NavTitle'
 import SideBarContianer from '@/components/SideBarContainer'
 import articles from '@/components/article'
@@ -89,7 +90,8 @@ export default function Article() {
                         </span>
                         <span>Size: {fileMap[ArticleComName].fileSize}</span>
                       </div>
-                      <ArticleCom key={index} />
+                      <ArticleCom key={index} id={ArticleComName} />
+                      <MdDirectory id={ArticleComName} />
                     </div>
                   }
                 />
